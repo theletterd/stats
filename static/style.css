@@ -79,6 +79,10 @@ body {
    background-color: #111;
 }
 
+body {
+   background-color: #111;
+}
+
 .stats {
     display: flex;
     flex-wrap: wrap;
@@ -86,7 +90,7 @@ body {
 
 .stat {
     text-align: center;
-    flex-grow: 1;
+    flex: 1 0 auto;
     padding: 44px;
     border-radius: 10px;	
     margin: 6px;

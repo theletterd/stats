@@ -12,32 +12,51 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 stat_cache = {}
 
-WEIGHT_STATS = [
-
+WEIGHT_STAT_GROUPS = [
+    [
+        'weight_lbs_recent',
+    ],
+    [
+        'weight_lbs_min_current_year', 
+        'weight_lbs_max_current_year'
+    ]
 ]
 
-MISC_STATS = [
-    'age',
-    'height',
-    'wife_count',
-    'married_years',
-    'children_count',
-    'birkenstock_count',    
-#    'recent_weight_lbs',
-    'currently_reading',
-    'tshirt_size'
+MISC_STAT_GROUPS = [
+    [
+        'age',
+        'height',
+        'wife_count',
+        'married_years',
+        'children_count',
+    ],
+    [
+        'currently_reading',
+        'birkenstock_count',    
+    ],
+    [
+    'tshirt_size',
+    'shoe_size_us_mens',
+    'shoe_size_us_womens',
+    'dress_size_us',
+    ]
 ]
 
-STEP_STATS = [
-    'step_count_today',
-    'step_count_yesterday',
-    'distance_miles_today',
-    'distance_miles_yesterday',
-]
-
-STEP_YEAR_STATS = [
-    'step_count_current_year',
-    'step_count_prev_year',
+STEP_STAT_GROUPS = [
+    [
+        'step_count_today',
+        'step_count_yesterday',
+        'distance_miles_today',
+        'distance_miles_yesterday',
+    ],
+    [
+        'step_count_current_year',
+        'step_count_prev_year',
+    ],
+    [
+        'distance_miles_current_year',
+        'distance_miles_prev_year',
+    ]
 ]
 
 @app.route("/")
@@ -50,33 +69,28 @@ def data():
     
     stats = {
         'misc_stats': {
-            'stats': [stat_cache[stat] for stat in MISC_STATS],
+            'stats': get_populated_stat_groups(MISC_STAT_GROUPS),
             'description': "Miscellaneous Stats"
-            },
+        },
         'step_stats': {
-            'stats': [stat_cache[stat] for stat in STEP_STATS],
+            'stats': get_populated_stat_groups(STEP_STAT_GROUPS),
             'description': 'Steps'
-            },
-        'step_year_stats': {
-            'stats': [stat_cache[stat] for stat in STEP_YEAR_STATS],
-            },
-        }
+        },
+        'weight_stats': {
+            'stats': get_populated_stat_groups(WEIGHT_STAT_GROUPS),
+            'description' : 'Weight (lbs)'
+        },
+    }
     return jsonify(stats)
 
+def get_populated_stat_groups(stat_groups):
+    return [[stat_cache[stat] for stat in stat_group] for stat_group in stat_groups]
+            
 
 def populate_stats():
     if not stat_cache:
         goodread_stats = goodreads.get_stats()
         gsheet_stats = gsheet.get_stats()
-        
-        # derived_stats - this should all be moved to the gsheet lib?
-        weight_lbs = float(gsheet_stats['weight_kg_recent']['value']) / 0.454
-        recent_weight_lbs = {
-            'stat_id': 'recent_weight_lbs',
-            'description': 'Recent Weight (lbs)',
-            'value': f"{weight_lbs:.1f}"
-        }
-        gsheet_stats['recent_weight_lbs'] = recent_weight_lbs
         
         stat_cache.update(goodread_stats)
         stat_cache.update(gsheet_stats)

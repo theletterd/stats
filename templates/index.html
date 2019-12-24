@@ -7,7 +7,8 @@
     <title>Duncan's Goals</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+    </div>
       <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
       <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
       <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
@@ -28,22 +29,38 @@
 	      }
 	  }
 
+          class BasicStatSubGroup extends React.Component {
+	      constructor(props) {
+	          super(props);
+              }
+
+	      render() {
+	          const basicStatElements = this.props.stats.map(stat =>
+	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} />
+	          );
+		  return (
+		      <div className="stats">
+			{basicStatElements}
+		      </div>
+		  );  
+	      }
+          }
+
 	  class BasicStats extends React.Component {
 	      constructor(props) {
 	          super(props);
               }
 
 	      render() {
-	          const basicStatElements = this.props.stat_group.stats.map(stat =>
-	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} />
-	          );
-		  
+		  const basicStatSubGroups = this.props.stat_group.stats.map(statSubGroup =>
+		      <BasicStatSubGroup key={statSubGroup[0].stat_id + "group"} stats={statSubGroup} />
+                  );
 	          return (
-	            <div className="stats">
+	            <div className="statgroup">
 		      {this.props.stat_group.description != undefined && 
 		          <div className="stat stat-header">{this.props.stat_group.description}</div> 
                       }
-		      {basicStatElements}
+		      {basicStatSubGroups}
 		    </div>
 	          );
 	      }
@@ -74,11 +91,11 @@
 		    
                   return (
                       <div className="main">
-                          <div className="header">Duncan's Stats</div>
+                        <div className="header">Duncan's Stats</div>
 			  <div className="stat-container">
-			      <BasicStats stat_group={this.state.stats.step_stats} />
-			      <BasicStats stat_group={this.state.stats.step_year_stats} />
 			      <BasicStats stat_group={this.state.stats.misc_stats} />
+			      <BasicStats stat_group={this.state.stats.step_stats} />
+			      <BasicStats stat_group={this.state.stats.weight_stats} />
 			  </div>
                       </div>
                   );
@@ -90,12 +107,6 @@
               <Controller />,
               document.getElementById('root')
           );
-
       </script>
-      <div>
-	{% for stat_id, stat_values in stats.items() %}
-	<div>{{ stat_id }}: {{ stat_values }}</div>
-	{% endfor %}
-      </div>
   </body>
 </html>
