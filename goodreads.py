@@ -1,10 +1,13 @@
 import requests
 import xml.etree.ElementTree as ET
 
+from config import GOODREADS_KEY
+from config import GOODREADS_USERID
+
 
 def get_stats():
 
-    resp = requests.get("https://www.goodreads.com/review/list?key=bW4fWiOzLkUPUK7H92VbCg&v=2&shelf=currently-reading&id=2459559")
+    resp = requests.get(f"https://www.goodreads.com/review/list?key={GOODREADS_KEY}&v=2&shelf=currently-reading&id={GOODREADS_USERID}")
     root = ET.fromstring(resp.content)
     title = root.findall("./reviews/review/book/title")[0].text
     image_url = root.findall("./reviews/review/book/image_url")[0].text
