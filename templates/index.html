@@ -20,7 +20,7 @@
 
 	      render() {
 	          return (
-           	      <div className="basic-stat">
+           	      <div className="stat">
 		          <div className="stat-description">{this.props.description}</div>
 	                  <div className="stat-value">{this.props.value}</div>
 		      </div>
@@ -34,11 +34,15 @@
               }
 
 	      render() {
-	          const basicStatElements = this.props.stats.map(stat =>
+	          const basicStatElements = this.props.stat_group.stats.map(stat =>
 	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} />
 	          );
+		  
 	          return (
-	            <div className="basic-stats">
+	            <div className="stats">
+		      {this.props.stat_group.description != undefined && 
+		          <div className="stat stat-header">{this.props.stat_group.description}</div> 
+                      }
 		      {basicStatElements}
 		    </div>
 	          );
@@ -72,7 +76,9 @@
                       <div className="main">
                           <div className="header">Duncan's Stats</div>
 			  <div className="stat-container">
-			      <BasicStats stats={this.state.stats.basic_stats} />
+			      <BasicStats stat_group={this.state.stats.step_stats} />
+			      <BasicStats stat_group={this.state.stats.step_year_stats} />
+			      <BasicStats stat_group={this.state.stats.misc_stats} />
 			  </div>
                       </div>
                   );

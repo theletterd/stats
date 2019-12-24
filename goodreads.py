@@ -11,6 +11,6 @@ def get_stats():
     
     return {'currently_reading': dict(
             stat_id="currently_reading", 
-            description="Book I'm reading", 
+            description="Reading", 
             value=title, 
             image_url=image_url)}

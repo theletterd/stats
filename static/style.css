@@ -79,12 +79,12 @@ body {
    background-color: #111;
 }
 
-.basic-stats {
+.stats {
     display: flex;
     flex-wrap: wrap;
 }
 
-.basic-stat {
+.stat {
     text-align: center;
     flex-grow: 1;
     padding: 44px;
@@ -93,12 +93,20 @@ body {
     background-color: #1d1c1c;
 }
 
-.basic-stat .stat-description {
+.stat-header {
+    width: 100%;
+    padding: 20px;
+    font-size: 27px;
+    color: #a8d6d6;
+    background-color: #0f1010;
+}
+
+.stat .stat-description {
    font-size: 23px;
    color: #fffef6e8;
 }
 
-.basic-stat .stat-value {
+.stat .stat-value {
     font-size: 55px;
     color: #bbd6cc;	
 }

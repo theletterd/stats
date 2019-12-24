@@ -12,15 +12,32 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 stat_cache = {}
 
+WEIGHT_STATS = [
 
-BASIC_STATS = [
+]
+
+MISC_STATS = [
     'age',
+    'height',
     'wife_count',
+    'married_years',
     'children_count',
     'birkenstock_count',    
+#    'recent_weight_lbs',
+    'currently_reading',
+    'tshirt_size'
+]
+
+STEP_STATS = [
     'step_count_today',
-    'distance_metres_today',
-    'distance_miles_today'
+    'step_count_yesterday',
+    'distance_miles_today',
+    'distance_miles_yesterday',
+]
+
+STEP_YEAR_STATS = [
+    'step_count_current_year',
+    'step_count_prev_year',
 ]
 
 @app.route("/")
@@ -31,7 +48,19 @@ def root():
 def data():
     populate_stats()
     
-    stats = {'basic_stats': [stat_cache[stat] for stat in BASIC_STATS]}
+    stats = {
+        'misc_stats': {
+            'stats': [stat_cache[stat] for stat in MISC_STATS],
+            'description': "Miscellaneous Stats"
+            },
+        'step_stats': {
+            'stats': [stat_cache[stat] for stat in STEP_STATS],
+            'description': 'Steps'
+            },
+        'step_year_stats': {
+            'stats': [stat_cache[stat] for stat in STEP_YEAR_STATS],
+            },
+        }
     return jsonify(stats)
 
 
@@ -40,14 +69,14 @@ def populate_stats():
         goodread_stats = goodreads.get_stats()
         gsheet_stats = gsheet.get_stats()
         
-        # derived_stats
-        distance_in_miles = float(gsheet_stats['distance_metres_today']['value']) / 1609
-        distance_miles_today = {
-            'stat_id': 'distance_miles_today',
-            'description': 'Distance (miles)',
-            'value': f"{distance_in_miles:.2f}"
+        # derived_stats - this should all be moved to the gsheet lib?
+        weight_lbs = float(gsheet_stats['weight_kg_recent']['value']) / 0.454
+        recent_weight_lbs = {
+            'stat_id': 'recent_weight_lbs',
+            'description': 'Recent Weight (lbs)',
+            'value': f"{weight_lbs:.1f}"
         }
-        gsheet_stats['distance_miles_today'] = distance_miles_today
+        gsheet_stats['recent_weight_lbs'] = recent_weight_lbs
         
         stat_cache.update(goodread_stats)
         stat_cache.update(gsheet_stats)
