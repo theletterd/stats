@@ -76,7 +76,7 @@ body {
 }
 
 .stat-container {
-  background-color: #1e1e33;
+   background-color: #111;
 }
 
 .basic-stats {
@@ -89,10 +89,8 @@ body {
     flex-grow: 1;
     padding: 44px;
     border-radius: 10px;	
-    border-color: blue;
-    border: 1px solid;
     margin: 6px;
-    background-color: #615e5a;
+    background-color: #1d1c1c;
 }
 
 .basic-stat .stat-description {
@@ -102,7 +100,7 @@ body {
 
 .basic-stat .stat-value {
     font-size: 55px;
-    color: #8fd4bb;	
+    color: #bbd6cc;	
 }
 
 /* from here it's all trash */

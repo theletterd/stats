@@ -15,6 +15,7 @@ stat_cache = {}
 
 BASIC_STATS = [
     'age',
+    'wife_count',
     'children_count',
     'birkenstock_count',    
     'step_count_today',
