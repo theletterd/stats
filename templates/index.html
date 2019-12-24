@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8" />
+      <link rel="stylesheet" type="text/css" href="./static/style.css">
+      <link rel="stylesheet" type="text/css" href="./static/bootstrap.min.css">
+    <title>Duncan's Goals</title>
+  </head>
+  <body>
+    <div id="root"></div>
+      <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+      <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+      <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+      <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+      
+      <!-- Load our React component. -->
+      <script type="text/babel">
+
+	  class BasicStats extends React.Component {
+	      constructor(props) {
+	          super(props);
+              }
+
+	      render() {
+	          return (
+	            <div>HI THERE</div>
+	          );
+	      }
+	  }
+
+          class Controller extends React.Component {
+	      constructor(props) {
+                  super(props);
+		  this.state = {};
+              }
+
+	      componentDidMount() {
+                  fetch("./data")
+                      .then(response => response.json())
+                      .then(data => {
+                          this.setState({stats: data});
+                  });
+	      }
+
+              render() {
+		  if (this.state.stats === undefined) {
+		      return (
+                          <div className="main">
+                              <div className="header">Duncan's Stats</div>
+		          </div>
+		      );
+		  }
+		    
+                  return (
+                      <div className="main">
+                          <div className="header">Duncan's Stats</div>
+			  <BasicStats stats={this.state.stats.basic_stats} />
+                      </div>
+                  );
+              }
+          }
+
+
+          ReactDOM.render(
+              <Controller />,
+              document.getElementById('root')
+          );
+
+      </script>
+      <div>
+	{% for stat_id, stat_values in stats.items() %}
+	<div>{{ stat_id }}: {{ stat_values }}</div>
+	{% endfor %}
+      </div>
+  </body>
+</html>
