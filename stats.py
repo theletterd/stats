@@ -18,7 +18,13 @@ WEIGHT_STAT_GROUPS = [
     ],
     [
         'weight_lbs_min_current_year', 
+        'weight_lbs_avg_current_year',
         'weight_lbs_max_current_year'
+    ],
+    [
+        'weight_lbs_min_prev_year', 
+        'weight_lbs_avg_prev_year',
+        'weight_lbs_max_prev_year'
     ]
 ]
 
