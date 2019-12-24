@@ -20,9 +20,9 @@
 
 	      render() {
 	          return (
-           	      <div>
-		          <div>{this.props.description}</div>
-	                  <div>{this.props.value}</div>
+           	      <div className="basic-stat">
+		          <div className="stat-description">{this.props.description}</div>
+	                  <div className="stat-value">{this.props.value}</div>
 		      </div>
                   )
 	      }
@@ -38,7 +38,8 @@
 	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} />
 	          );
 	          return (
-	            <div>
+	            <div className="basic-stats">
+		      <div className="stats-header">Basic Stats</div>
 		        {basicStatElements}
 		    </div>
 	          );
@@ -71,7 +72,9 @@
                   return (
                       <div className="main">
                           <div className="header">Duncan's Stats</div>
-			  <BasicStats stats={this.state.stats.basic_stats} />
+			  <div className="stat-container">
+			      <BasicStats stats={this.state.stats.basic_stats} />
+			  </div>
                       </div>
                   );
               }

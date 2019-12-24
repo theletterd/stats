@@ -59,10 +59,9 @@ body {
 
 .main {
     display: grid;
-    grid-template-rows: 120px auto;
-    grid-template-columns: 160px auto;
-    grid-template-areas: "header header" "siderbar main";
-    height: 100vh;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    grid-template-areas: "header" "main";
 }
 
 .header {
@@ -72,8 +71,41 @@ body {
     vertical-align: middle;
     padding: 17px 30px;
     grid-area: header;
+    height: 120px;
 	
 }
+
+.stat-container {
+  background-color: #1e1e33;
+}
+
+.basic-stats {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.basic-stat {
+    text-align: center;
+    flex-grow: 1;
+    padding: 44px;
+    border-radius: 10px;	
+    border-color: blue;
+    border: 1px solid;
+    margin: 6px;
+    background-color: #615e5a;
+}
+
+.basic-stat .stat-description {
+   font-size: 23px;
+   color: #fffef6e8;
+}
+
+.basic-stat .stat-value {
+    font-size: 55px;
+    color: #8fd4bb;	
+}
+
+/* from here it's all trash */
 
 .goal {
     font-size: 30px;
