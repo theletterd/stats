@@ -100,10 +100,7 @@ def populate_stats():
         
         stat_cache.update(goodread_stats)
         stat_cache.update(gsheet_stats)
-    pprint.pprint(stat_cache)
-        
-        
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
