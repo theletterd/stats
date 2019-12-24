@@ -1,11 +1,12 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from config import GSHEET_JSON_KEYFILE
 
 # use creds to create a client to interact with the Google Drive API
 scope = ["https://spreadsheets.google.com/feeds",
          "https://www.googleapis.com/auth/drive",]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(GSHEET_JSON_KEYFILE, scope)
 client = gspread.authorize(creds)
 
 def get_stats():
