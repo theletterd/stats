@@ -9,4 +9,8 @@ def get_stats():
     title = root.findall("./reviews/review/book/title")[0].text
     image_url = root.findall("./reviews/review/book/image_url")[0].text
     
-    return {'currently_reading': dict(description="Book I'm reading", value=title, image_url=image_url)}
+    return {'currently_reading': dict(
+            stat_id="currently_reading", 
+            description="Book I'm reading", 
+            value=title, 
+            image_url=image_url)}

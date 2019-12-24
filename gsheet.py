@@ -18,7 +18,7 @@ def get_stats():
     stats = {}
     for sheet_stat in sheet_stats:
         if sheet_stat.get("stat_id"):
-            key = sheet_stat.pop('stat_id')
+            key = sheet_stat.get("stat_id")
             stats[key] = sheet_stat
 
     return stats

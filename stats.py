@@ -32,7 +32,6 @@ def populate_stats():
     if not stat_cache:
         goodread_stats = goodreads.get_stats()
         gsheet_stats = gsheet.get_stats()
-
         
         stat_cache.update(goodread_stats)
         stat_cache.update(gsheet_stats)

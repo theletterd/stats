@@ -16,14 +16,31 @@
       <!-- Load our React component. -->
       <script type="text/babel">
 
+	  class BasicStat extends React.Component {
+
+	      render() {
+	          return (
+           	      <div>
+		          <div>{this.props.description}</div>
+	                  <div>{this.props.value}</div>
+		      </div>
+                  )
+	      }
+	  }
+
 	  class BasicStats extends React.Component {
 	      constructor(props) {
 	          super(props);
               }
 
 	      render() {
+	          const basicStatElements = this.props.stats.map(stat =>
+	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} />
+	          );
 	          return (
-	            <div>HI THERE</div>
+	            <div>
+		        {basicStatElements}
+		    </div>
 	          );
 	      }
 	  }
