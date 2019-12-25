@@ -37,6 +37,12 @@ MISC_STAT_GROUPS = [
         'birkenstock_count',    
     ],
     [
+        'piercings_current',
+        'piercing_instances',
+        'tattoo_count',
+        'surgery_count'
+    ],
+    [
     'tshirt_size',
     'shoe_size_us_mens',
     'shoe_size_us_womens',

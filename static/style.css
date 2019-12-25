@@ -95,6 +95,7 @@ body {
     border-radius: 10px;	
     margin: 6px;
     background-color: #1d1c1c;
+    overflow: hidden;
 }
 
 .stat-header {
@@ -115,3 +116,20 @@ body {
     color: #bbd6cc;	
 }
 
+.notes {
+    font-size: 30px;
+    height: 50px;
+    width: 50px;
+    background-color: #170cbd;
+    float: right;
+    margin-top: -106px;
+    margin-right: -70px;
+    transform: rotate(45deg);
+    cursor: pointer;
+}
+
+.popover {
+    padding: 15px;
+    font-size: 15px !important;
+    background-color: #ecedf7 !important;
+}

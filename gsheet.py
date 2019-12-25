@@ -12,6 +12,7 @@ client = gspread.authorize(creds)
 def get_stats():
     # Find a workbook by name and open the first sheet
     # Make sure you use the right name here.
+    client.login()
     sheet = client.open("Stats").sheet1
 
     sheet_stats = sheet.get_all_records()
