@@ -19,25 +19,33 @@
       <script type="text/babel">
 
 	  class BasicStat extends React.Component {
-
+	      
 	      render() {
+	          var values = [this.props.value];
+	          var valueElements;
+	          if (Array.isArray(this.props.value) === true) {
+	               valueElements = this.props.value.map(value =>
+	                  <div key={this.props.stat_id + value} className="stat-value">{value}</div>
+	              );
+	          } else {
+		       valueElements = [
+			  <div key={this.props.stat_id + this.props.value} className="stat-value">{this.props.value}</div>
+		       ];
+	          }
+
 	          return (
            	      <div className="stat">
 		          <div className="stat-description">{this.props.description}</div>
-	                  <div className="stat-value">{this.props.value}</div>
+			  {valueElements}
 		      </div>
                   )
 	      }
 	  }
 
           class BasicStatSubGroup extends React.Component {
-	      constructor(props) {
-	          super(props);
-              }
-
 	      render() {
 	          const basicStatElements = this.props.stats.map(stat =>
-	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} />
+	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} stat_id={stat.stat_id}/>
 	          );
 		  return (
 		      <div className="stats">
@@ -48,10 +56,6 @@
           }
 
 	  class BasicStats extends React.Component {
-	      constructor(props) {
-	          super(props);
-              }
-
 	      render() {
 		  const basicStatSubGroups = this.props.stat_group.stats.map(statSubGroup =>
 		      <BasicStatSubGroup key={statSubGroup[0].stat_id + "group"} stats={statSubGroup} />
@@ -89,7 +93,6 @@
 		          </div>
 		      );
 		  }
-		  console.log(this.state.stats);
 		  const basicStatElements = this.state.stats.map(statCollection =>
 		      <BasicStats key={statCollection.stat_group} stat_group={statCollection} />
                   );

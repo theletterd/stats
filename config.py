@@ -17,6 +17,16 @@ WEIGHT_STAT_GROUPS = [
     ]
 ]
 
+BOOK_STAT_GROUPS = [
+    [
+        'currently_reading'
+    ],
+    [
+        'read_current_year',
+        'read_prev_year'
+    ],
+]
+
 MISC_STAT_GROUPS = [
     [
         'age',
@@ -24,9 +34,6 @@ MISC_STAT_GROUPS = [
         'wife_count',
         'married_years',
         'children_count',
-    ],
-    [
-        'currently_reading',
         'birkenstock_count',    
     ],
     [
@@ -34,7 +41,7 @@ MISC_STAT_GROUPS = [
     'shoe_size_us_mens',
     'shoe_size_us_womens',
     'dress_size_us',
-    ]
+    ],
 ]
 
 STEP_STAT_GROUPS = [

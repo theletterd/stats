@@ -37,6 +37,11 @@ def data():
             'description' : 'Weight (lbs)',
             'stat_group': "weight_stats",
         },
+        {
+            'stats': get_populated_stat_groups(raw_stats, config.BOOK_STAT_GROUPS),
+            'description' : 'Books',
+            'stat_group': "book_stats",
+        },
     ]
     return jsonify(stats)
 
