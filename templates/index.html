@@ -89,14 +89,16 @@
 		          </div>
 		      );
 		  }
-		    
+		  console.log(this.state.stats);
+		  const basicStatElements = this.state.stats.map(statCollection =>
+		      <BasicStats key={statCollection.stat_group} stat_group={statCollection} />
+                  );
+
                   return (
                       <div className="main">
                         <div className="header">Duncan's Stats</div>
 			  <div className="stat-container">
-			      <BasicStats stat_group={this.state.stats.misc_stats} />
-			      <BasicStats stat_group={this.state.stats.step_stats} />
-			      <BasicStats stat_group={this.state.stats.weight_stats} />
+			      {basicStatElements}
 			  </div>
                       </div>
                   );

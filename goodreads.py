@@ -1,8 +1,8 @@
 import requests
 import xml.etree.ElementTree as ET
 
-from config import GOODREADS_KEY
-from config import GOODREADS_USERID
+from secret import GOODREADS_KEY
+from secret import GOODREADS_USERID
 
 
 def get_stats():

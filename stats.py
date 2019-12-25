@@ -1,105 +1,77 @@
 import pprint
+import json
 
 from flask import Flask
 from flask import jsonify
 from flask import render_template
+from pymemcache.client.base import Client
 
+import config
 import goodreads
 import gsheet
 
+memcached_client = Client(("localhost", config.MEMCACHED_PORT))
+
 app = Flask(__name__)
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-stat_cache = {}
-
-WEIGHT_STAT_GROUPS = [
-    [
-        'weight_lbs_recent',
-    ],
-    [
-        'weight_lbs_min_current_year', 
-        'weight_lbs_avg_current_year',
-        'weight_lbs_max_current_year'
-    ],
-    [
-        'weight_lbs_min_prev_year', 
-        'weight_lbs_avg_prev_year',
-        'weight_lbs_max_prev_year'
-    ]
-]
-
-MISC_STAT_GROUPS = [
-    [
-        'age',
-        'height',
-        'wife_count',
-        'married_years',
-        'children_count',
-    ],
-    [
-        'currently_reading',
-        'birkenstock_count',    
-    ],
-    [
-    'tshirt_size',
-    'shoe_size_us_mens',
-    'shoe_size_us_womens',
-    'dress_size_us',
-    ]
-]
-
-STEP_STAT_GROUPS = [
-    [
-        'step_count_today',
-        'step_count_yesterday',
-        'distance_miles_today',
-        'distance_miles_yesterday',
-    ],
-    [
-        'step_count_current_year',
-        'step_count_prev_year',
-    ],
-    [
-        'distance_miles_current_year',
-        'distance_miles_prev_year',
-    ]
-]
 
 @app.route("/")
 def root():
-    return render_template('index.html', stats=stat_cache)
+    return render_template('index.html')
 
 @app.route("/data")
 def data():
-    populate_stats()
-    
-    stats = {
-        'misc_stats': {
-            'stats': get_populated_stat_groups(MISC_STAT_GROUPS),
-            'description': "Miscellaneous Stats"
+    raw_stats = get_stats()
+    stats = [
+        {
+            'stats': get_populated_stat_groups(raw_stats, config.MISC_STAT_GROUPS),
+            'description': "Miscellaneous Stats",
+            'stat_group': "misc_stats",
         },
-        'step_stats': {
-            'stats': get_populated_stat_groups(STEP_STAT_GROUPS),
-            'description': 'Steps'
+        {
+            'stats': get_populated_stat_groups(raw_stats, config.STEP_STAT_GROUPS),
+            'description': 'Steps',
+            'stat_group': "step_stats",
         },
-        'weight_stats': {
-            'stats': get_populated_stat_groups(WEIGHT_STAT_GROUPS),
-            'description' : 'Weight (lbs)'
+        {
+            'stats': get_populated_stat_groups(raw_stats, config.WEIGHT_STAT_GROUPS),
+            'description' : 'Weight (lbs)',
+            'stat_group': "weight_stats",
         },
-    }
+    ]
     return jsonify(stats)
 
-def get_populated_stat_groups(stat_groups):
-    return [[stat_cache[stat] for stat in stat_group] for stat_group in stat_groups]
+
+def get_populated_stat_groups(raw_stats, stat_groups):
+    return [[raw_stats[stat] for stat in stat_group] for stat_group in stat_groups]
             
 
-def populate_stats():
-    if not stat_cache:
+def get_stats():
+    stats = {}
+    
+    # attempt to get stats from memcached
+    try:
+        stats = json.loads(memcached_client.get(config.MEMCACHED_STATS_KEY))
+    except Exception as e:
+        pass
+    
+    if not stats:
         goodread_stats = goodreads.get_stats()
         gsheet_stats = gsheet.get_stats()
         
-        stat_cache.update(goodread_stats)
-        stat_cache.update(gsheet_stats)
+        stats.update(goodread_stats)
+        stats.update(gsheet_stats)
+        
+    # attempt to push stats back to memcached
+    try:
+        memcached_client.set(
+            config.MEMCACHED_STATS_KEY,
+            json.dumps(stats),
+            expire=60 * 15
+        )
+    except:
+        pass
+
+    return stats
     
 
 if __name__ == '__main__':

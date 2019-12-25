@@ -3,3 +3,4 @@ ipython
 flask
 oauth2client
 gspread
+pymemcache
