@@ -96,6 +96,7 @@ body {
     margin: 6px;
     background-color: #1d1c1c;
     overflow: hidden;
+    max-width: 100vw;
 }
 
 .stat-header {
