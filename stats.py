@@ -1,3 +1,4 @@
+import asyncio
 import pprint
 import json
 
@@ -56,6 +57,20 @@ def get_populated_stat_groups(raw_stats, stat_groups):
     return [[raw_stats[stat] for stat in stat_group] for stat_group in stat_groups]
             
 
+async def get_stats_async():
+    stats = {}
+    
+    stat_dicts = await asyncio.gather(
+        goodreads.get_books_read_this_year(),
+        goodreads.get_books_read_last_year(),
+        goodreads.get_currently_reading(),
+    )
+    print("got results")
+    for stat_dict in stat_dicts:
+        stats.update(stat_dict)
+
+    return stats
+
 def get_stats():
     stats = {}
     
@@ -67,14 +82,10 @@ def get_stats():
 
     # can we run these concurrently?
     if not stats:
-        goodread_stats = goodreads.get_stats()
-        gsheet_stats = gsheet.get_stats()
-        running_stats = strava.get_stats()
-        
-        stats.update(goodread_stats)
-        stats.update(gsheet_stats)
-        stats.update(running_stats)
-        
+        stats = asyncio.run(get_stats_async())
+        stats.update(gsheet.get_stats())
+        stats.update(strava.get_stats())
+
     # attempt to push stats back to memcached
     try:
         memcached_client.set(
