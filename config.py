@@ -67,3 +67,13 @@ STEP_STAT_GROUPS = [
     ]
 ]
 
+RUNNING_STAT_GROUPS = [
+    [
+        'run_count_current_year',
+        'run_count_prev_year',
+    ],
+    [
+        'distance_run_current_year_miles',
+        'distance_run_prev_year_miles',
+    ]
+]
