@@ -1,24 +1,12 @@
+import asyncio
+from aiohttp_requests import requests
+
 import datetime
 import json
-import requests
 
 from secret import STRAVA_CODE
 from secret import STRAVA_CLIENT_ID
 from secret import STRAVA_CLIENT_SECRET
-
-
-def get_token():
-    payload = {
-        "code": STRAVA_CODE,
-        "client_id": STRAVA_CLIENT_ID,
-        "client_secret": STRAVA_CLIENT_SECRET,
-        "grant_type": "authorization_code"
-    }
-
-    resp = requests.post("https://www.strava.com/oauth/token", data=payload)
-
-    token = resp.json()['access_token']
-    return token
 
 
 def convert_metres_to_miles_safe(metres):
@@ -26,16 +14,37 @@ def convert_metres_to_miles_safe(metres):
         return 0
     return metres / 1609.0
 
-def get_stats():
-    token = get_token()
+
+async def get_token():
+    payload = {
+        "code": STRAVA_CODE,
+        "client_id": STRAVA_CLIENT_ID,
+        "client_secret": STRAVA_CLIENT_SECRET,
+        "grant_type": "authorization_code"
+    }
+    print("getting token")
+    resp = await requests.post("https://www.strava.com/oauth/token", data=payload)
+    print("waiting for token")
+    json = await resp.json()
+    print("got token")
+
+    return json['access_token']
+
+
+async def get_stats():
+    token = await get_token()
 
     headers = {"Authorization": f"Bearer {token}"}
     params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
-    resp = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
+    print("getting data")
+    resp = await requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
+    print("waiting for data")
+    json_response = await resp.json()
+    print("got data")
 
     stats = {}
 
-    for activity in resp.json():
+    for activity in json_response:
         year = datetime.datetime.strptime(activity['start_date_local'],'%Y-%m-%dT%H:%M:%SZ').year
         distance_metres = activity['distance']
     

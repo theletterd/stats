@@ -64,6 +64,7 @@ async def get_stats_async():
         goodreads.get_books_read_this_year(),
         goodreads.get_books_read_last_year(),
         goodreads.get_currently_reading(),
+        strava.get_stats()
     )
     print("got results")
     for stat_dict in stat_dicts:
@@ -82,9 +83,16 @@ def get_stats():
 
     # can we run these concurrently?
     if not stats:
+        import time
+        t1 = time.time()
         stats = asyncio.run(get_stats_async())
+        t2 = time.time()
+        print(t2 - t1)
+        print("long ting")
         stats.update(gsheet.get_stats())
-        stats.update(strava.get_stats())
+        print("fark")
+        t3 = time.time()
+        print(t3 - t2)
 
     # attempt to push stats back to memcached
     try:
