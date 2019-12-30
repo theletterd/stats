@@ -1,14 +1,14 @@
+import json
+import logging
+
 from pymemcache.client.base import Client
 
 import config
-import goodreads
-import gsheet
-import strava
-
-
+from apis import goodreads
+from apis import gsheet
+from apis import strava
 
 memcached_client = Client(("localhost", config.MEMCACHED_PORT))
-
 
 
 class StatCollector(object):
@@ -18,10 +18,7 @@ class StatCollector(object):
         stats = {}
 
         # attempt to get stats from memcached
-        try:
-            stats = json.loads(memcached_client.get(config.MEMCACHED_STATS_KEY))
-        except Exception as e:
-            pass
+        stats = StatCollector._load_stats_from_memcached()
 
         # can we run these concurrently?
         if not stats:
@@ -34,14 +31,30 @@ class StatCollector(object):
                     stats[stat.stat_id] = stat._asdict()
 
         # attempt to push stats back to memcached
+        StatCollector._dump_stats_to_memcached(stats)
+
+        return stats
+
+    @staticmethod
+    def _load_stats_from_memcached():
+        stats = {}
+        try:
+            stats = json.loads(memcached_client.get(config.MEMCACHED_STATS_KEY))
+        except Exception as e:
+            print(e)
+
+        return stats
+
+    @staticmethod
+    def _dump_stats_to_memcached(stats):
         try:
             memcached_client.set(
                 config.MEMCACHED_STATS_KEY,
                 json.dumps(stats),
                 expire=60 * 15
             )
-        except:
+        except Exception as e:
+            print(e)
             pass
 
-        return stats
     
