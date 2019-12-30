@@ -74,11 +74,11 @@ def get_stats():
         goodread_stats = goodreads.get_stats()
         gsheet_stats = gsheet.get_stats()
         running_stats = strava.get_stats()
-        
-        stats.update(goodread_stats)
-        stats.update(gsheet_stats)
-        stats.update(running_stats)
-        
+
+        for stat_list in goodread_stats, gsheet_stats, running_stats:
+            for stat in stat_list:
+                stats[stat.stat_id] = stat._asdict()
+
     # attempt to push stats back to memcached
     try:
         memcached_client.set(
