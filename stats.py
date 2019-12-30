@@ -22,38 +22,42 @@ def root():
 @app.route("/data")
 def data():
     raw_stats = get_stats()
-    stats = [
-        {
-            'stats': get_populated_stat_groups(raw_stats, config.MISC_STAT_GROUPS),
-            'description': "Miscellaneous Stats",
-            'stat_group': "misc_stats",
-        },
-        {
-            'stats': get_populated_stat_groups(raw_stats, config.STEP_STAT_GROUPS),
-            'description': 'Steps',
-            'stat_group': "step_stats",
-        },
-        {
-            'stats': get_populated_stat_groups(raw_stats, config.RUNNING_STAT_GROUPS),
-            'description': 'Runs',
-            'stat_group': "run_stats",
-        },
-        {
-            'stats': get_populated_stat_groups(raw_stats, config.WEIGHT_STAT_GROUPS),
-            'description' : 'Weight (lbs)',
-            'stat_group': "weight_stats",
-        },
-        {
-            'stats': get_populated_stat_groups(raw_stats, config.BOOK_STAT_GROUPS),
-            'description' : 'Books',
-            'stat_group': "book_stats",
-        },
+
+    stat_groups = [
+        config.MISC_STAT_GROUPS,
+        config.STEP_STAT_GROUPS,
+        config.RUNNING_STAT_GROUPS,
+        config.WEIGHT_STAT_GROUPS,
+        config.BOOK_STAT_GROUPS,
     ]
+
+    stats = []
+
+    for stat_group in stat_groups:
+        stats.append({
+                'stats': get_populated_stat_groups(raw_stats, stat_group['stat_groups']),
+                'description': stat_group['description'],
+                'stat_group': stat_group['stat_group_id']
+        })
     return jsonify(stats)
 
 
 def get_populated_stat_groups(raw_stats, stat_groups):
-    return [[raw_stats[stat] for stat in stat_group] for stat_group in stat_groups]
+    populated_stat_groups = []
+    for stat_group in stat_groups:
+        populated_stat_group = []
+
+        # only populate stats that we know we have.
+        for stat in stat_group:
+            populated_stat = raw_stats.get(stat)
+            if populated_stat is not None:
+                populated_stat_group.append(populated_stat)
+
+        # if we end up with no stats in the group, let's not append it
+        if populated_stat_group:
+            populated_stat_groups.append(populated_stat_group)
+
+    return populated_stat_groups
             
 
 def get_stats():
