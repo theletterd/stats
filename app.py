@@ -27,17 +27,28 @@ def root():
 
 @app.route("/data")
 def data():
-    raw_stats = StatCollector.get_collected_stats()
+    raw_stats, errors = StatCollector.get_collected_stats()
+
+    # format the errors.
+    error_messages = [str(e) for e in errors]
 
     stats = []
 
     for stat_group in ORDERED_STAT_GROUPS:
-        stats.append({
-                'stats': _get_populated_stat_groups(raw_stats, stat_group['stat_groups']),
-                'description': stat_group['description'],
-                'stat_group': stat_group['stat_group_id']
-        })
-    return jsonify(stats)
+        populated_stats = _get_populated_stat_groups(raw_stats, stat_group['stat_groups'])
+        if populated_stats:
+            stats.append({
+                    'stats': populated_stats,
+                    'description': stat_group['description'],
+                    'stat_group': stat_group['stat_group_id']
+            })
+
+    data = dict(
+        stats=stats,
+        error_messages=error_messages
+    )
+
+    return jsonify(data)
 
 
 def _get_populated_stat_groups(raw_stats, stat_group):

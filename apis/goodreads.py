@@ -2,6 +2,7 @@ import datetime
 import requests
 import xml.etree.ElementTree as ET
 
+from .exceptions import stat_exception_override
 from secret import GOODREADS_KEY
 from secret import GOODREADS_USERID
 
@@ -58,6 +59,7 @@ def get_currently_reading():
 
 
 
+@stat_exception_override("goodreads")
 def get_stats():
     stats = [
         get_currently_reading(),

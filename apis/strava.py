@@ -2,6 +2,7 @@ import datetime
 import json
 import requests
 
+from .exceptions import stat_exception_override
 from secret import STRAVA_CODE
 from secret import STRAVA_CLIENT_ID
 from secret import STRAVA_CLIENT_SECRET
@@ -27,6 +28,7 @@ def convert_metres_to_miles_safe(metres):
         return 0
     return metres / 1609.0
 
+@stat_exception_override("strava")
 def get_stats():
     token = get_token()
 

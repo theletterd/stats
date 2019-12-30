@@ -16,24 +16,31 @@ class StatCollector(object):
     @staticmethod
     def get_collected_stats():
         stats = {}
+        errors = []
 
         # attempt to get stats from memcached
         stats = StatCollector._load_stats_from_memcached()
 
         # can we run these concurrently?
         if not stats:
-            goodread_stats = goodreads.get_stats()
-            gsheet_stats = gsheet.get_stats()
-            running_stats = strava.get_stats()
+            stat_list = []
 
-            for stat_list in goodread_stats, gsheet_stats, running_stats:
-                for stat in stat_list:
-                    stats[stat.stat_id] = stat._asdict()
+            stat_getter_methods = [goodreads.get_stats, gsheet.get_stats, strava.get_stats]
+            
+            for getter in stat_getter_methods:
+                try:
+                    stat_list.extend(getter())
+                except Exception as e:
+                    errors.append(e)
+                    print(e)
+
+            for stat in stat_list:
+                stats[stat.stat_id] = stat._asdict()
 
         # attempt to push stats back to memcached
         StatCollector._dump_stats_to_memcached(stats)
 
-        return stats
+        return stats, errors
 
     @staticmethod
     def _load_stats_from_memcached():
