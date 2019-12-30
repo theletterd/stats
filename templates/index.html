@@ -89,7 +89,7 @@
                   fetch("./data")
                       .then(response => response.json())
                       .then(data => {
-                          this.setState({stats: data});
+                          this.setState({stats: data.stats, error_messages: data.error_messages});
                   });
 	      }
 
@@ -108,6 +108,13 @@
 		  const basicStatElements = this.state.stats.map(statCollection =>
 		      <BasicStats key={statCollection.stat_group} stat_group={statCollection} />
                   );
+
+		  if(this.state.error_messages.length > 0) {
+		      console.log("Errors talking to the following APIs:");
+		      this.state.error_messages.forEach(function(error) {
+		          console.log("   " + error);
+		      });
+		  }
 
                   return (
                       <div className="main">
