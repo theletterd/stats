@@ -134,3 +134,7 @@ body {
     font-size: 15px !important;
     background-color: #ecedf7 !important;
 }
+
+.loading {
+    color: #28f128;
+}

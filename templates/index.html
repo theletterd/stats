@@ -4,11 +4,15 @@
       <meta charset="UTF-8" />
       <link rel="stylesheet" type="text/css" href="./static/style.css">
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Duncan's Goals</title>
+    <title>Duncan's Stats</title>
   </head>
   <body style="background-color: #111">
-    <div id="root">
+    <div class="main">
+      <div class="header">Duncan's Stats</div>
+      <div id="root">
+      </div>
     </div>
+
       <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
       <!-- Note: when developing, replace "production.min.js" with "development.js". -->
       <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
@@ -100,8 +104,8 @@
               render() {
 		  if (this.state.stats === undefined) {
 		      return (
-                          <div className="main">
-                              <div className="header">Duncan's Stats</div>
+                          <div className="stat loading">
+                              Loading...
 		          </div>
 		      );
 		  }
@@ -117,12 +121,9 @@
 		  }
 
                   return (
-                      <div className="main">
-                        <div className="header">Duncan's Stats</div>
-			  <div className="stat-container">
-			      {basicStatElements}
-			  </div>
-                      </div>
+		      <div className="stat-container">
+			{basicStatElements}
+		      </div>
                   );
               }
           }

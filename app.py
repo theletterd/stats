@@ -25,6 +25,16 @@ def root():
     return render_template('index.html')
 
 
+@app.route("/wp-login", methods=['GET', 'POST']) # for jokes :D
+def login():
+    if request.method == 'POST':
+        # do login stuff, set cookie, etc, redirect to homepage, show "HI THERE" thing
+        pass
+    else:
+        # show the login form, set CSRF cookie
+        pass
+
+
 @app.route("/data")
 def data():
     raw_stats, errors = StatCollector.get_collected_stats()
