@@ -1,5 +1,4 @@
 import json
-import logging
 
 from pymemcache.client.base import Client
 
@@ -26,7 +25,7 @@ class StatCollector(object):
             stat_list = []
 
             stat_getter_methods = [goodreads.get_stats, gsheet.get_stats, strava.get_stats]
-            
+
             for getter in stat_getter_methods:
                 try:
                     stat_list.extend(getter())
@@ -64,4 +63,4 @@ class StatCollector(object):
             print(e)
             pass
 
-    
+
