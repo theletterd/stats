@@ -106,11 +106,6 @@
               }
           }
 
-
-          ReactDOM.render(
-              <Controller />,
-              document.getElementById('root')
-          );
 	  $('body').on('click', function (e) {
 	      //did not click a popover toggle or popover
 	      if ($(e.target).data('toggle') !== 'popover'
@@ -118,6 +113,12 @@
                   $('[data-toggle="popover"]').popover('hide');
 	      }
 	  });
+
+          ReactDOM.render(
+              <Controller />,
+              document.getElementById('root')
+          );
+
       </script>
 
 

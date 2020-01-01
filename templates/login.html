@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+  "butt butt butt butt"
+  <script type="text/babel">
+      class LoginForm extends React.Component {
+          render() {
+              return (
+                  <div class="login-form-container">
+                    <form class="form-signin" action="/wp-login" method="post">
+		      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+		      <label for="inputEmail" class="sr-only">Email address</label>
+		      <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus=""  />
+		      <label for="inputPassword" class="sr-only">Password</label>
+		      <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="" autocomplete="off" />
+		      <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" />
+		    </form>
+		  </div>
+            );
+        }
+    }
+
+    ReactDOM.render(
+      <LoginForm />,
+      document.getElementById('root')
+    );
+  </script>
+{% endblock %}

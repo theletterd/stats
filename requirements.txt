@@ -1,6 +1,7 @@
 requests
 ipython
 flask
+flask-bcrypt
 oauth2client
 gspread
 pymemcache
