@@ -134,3 +134,17 @@ body {
     font-size: 15px !important;
     background-color: #ecedf7 !important;
 }
+
+.loading {
+    color: #28f128;
+}
+
+.login-form-container {
+    margin: auto;		    
+}
+
+.form-signin {
+    color: orange;
+    max-width: 350px;
+    margin: auto;
+}
