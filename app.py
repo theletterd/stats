@@ -20,7 +20,7 @@ def create_app():
     from models import bcrypt
     bcrypt.init_app(app)
 
-    from routes import home_app
+    from home import home_app
     app.register_blueprint(home_app)
 
     return app

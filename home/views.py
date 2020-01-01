@@ -1,5 +1,4 @@
 from flask import Blueprint
-
 from flask import jsonify
 from flask import redirect
 from flask import render_template
@@ -8,12 +7,14 @@ from flask import url_for
 from flask import flash
 
 
-from stat_collector import StatCollector
+from .stat_collector import StatCollector
 import config
 
 from models import User
 
-home_app = Blueprint('home', __name__)
+app = Blueprint('home', __name__)
+
+
 
 ORDERED_STAT_GROUPS = [
     config.MISC_STAT_GROUPS,
@@ -24,12 +25,12 @@ ORDERED_STAT_GROUPS = [
 ]
 
 
-@home_app.route("/")
+@app.route("/")
 def index():
     return render_template('index.html')
 
 
-@home_app.route("/wp-login", methods=['GET', 'POST']) # for jokes :D
+@app.route("/wp-login", methods=['GET', 'POST']) # for jokes :D
 def login():
     if request.method == 'POST':
         # do login stuff
@@ -43,7 +44,7 @@ def login():
         return render_template('login.html')
 
 
-@home_app.route("/logout")
+@app.route("/logout")
 def logout():
     # log you out
     # set flash stuff
@@ -53,7 +54,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-@home_app.route("/data")
+@app.route("/data")
 def data():
     raw_stats, errors = StatCollector.get_collected_stats()
 
