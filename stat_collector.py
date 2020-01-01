@@ -3,9 +3,9 @@ import json
 from pymemcache.client.base import Client
 
 import config
-from apis import goodreads
-from apis import gsheet
-from apis import strava
+from oauth_apis import goodreads
+from oauth_apis import gsheet
+from oauth_apis import strava
 
 memcached_client = Client(("localhost", config.MEMCACHED_PORT))
 
