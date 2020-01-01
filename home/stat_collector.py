@@ -3,9 +3,9 @@ import json
 from pymemcache.client.base import Client
 
 import config
-from .oauth_apis import GoodreadsAPI
-from .oauth_apis import GoogleSheetsAPI
-from .oauth_apis import StravaAPI
+from .oauth_apis.goodreads import GoodreadsAPI
+from .oauth_apis.gsheet import GoogleSheetsAPI
+from .oauth_apis.strava import StravaAPI
 
 memcached_client = Client(("localhost", config.MEMCACHED_PORT))
 
@@ -24,7 +24,8 @@ class StatCollector(object):
         if not stats:
             stat_list = []
 
-            stat_getter_methods = [GoodreadsAPI.get_stats, GoogleSheetsAPI.get_stats, StravaAPI.get_stats]
+            #stat_getter_methods = [GoodreadsAPI.get_stats, GoogleSheetsAPI.get_stats, StravaAPI.get_stats]
+            stat_getter_methods = [StravaAPI.get_stats]
 
             for getter in stat_getter_methods:
                 try:
