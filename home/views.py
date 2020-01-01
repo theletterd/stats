@@ -6,6 +6,9 @@ from flask import request
 from flask import url_for
 from flask import flash
 
+from flask_login import login_required
+from flask_login import login_user
+from flask_login import logout_user
 
 from .stat_collector import StatCollector
 import config
@@ -24,21 +27,38 @@ ORDERED_STAT_GROUPS = [
     config.BOOK_STAT_GROUPS,
 ]
 
+@app.route("/boobs")
+@login_required
+def boobs():
+    return "( o  ) (  o )"
+
 
 @app.route("/")
 def index():
     return render_template('index.html')
 
 
-@app.route("/wp-login", methods=['GET', 'POST']) # for jokes :D
+@app.route("/authorized_apps")
+@login_required
+def authorized_apps():
+    return "authorised shit"
+
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         # do login stuff
         email = request.form.get("email")
         password = request.form.get("password")
         # do login stuff, set cookie, etc, redirect to homepage, show "HI THERE" thing
-        valid_login = User.check_login(email, password)
-        return str(valid_login)
+        user = User.check_login(email, password)
+        # TODO use forms,
+        if user:
+            login_user(user)
+            return redirect(url_for(".authorized_apps"))
+        else:
+            return render_template("login.html")
+
     else:
         # show the login form, set CSRF cookie
         return render_template('login.html')
@@ -49,9 +69,9 @@ def logout():
     # log you out
     # set flash stuff
     flash("You're logged out, homie")
-
+    logout_user()
     # redirect to homepage.
-    return redirect(url_for('index'))
+    return redirect(url_for('.index'))
 
 
 @app.route("/data")
