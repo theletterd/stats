@@ -30,6 +30,7 @@ class GoodreadsAPI(object):
 
 
     def get_books_read_last_year():
+        # TODO this is almost identical to get_books_read_this_year, needs refactoring.
         year = datetime.date.today().year - 1
         resp = requests.get(f"https://www.goodreads.com/review/list?key={GOODREADS_KEY}&v=2&read_at={year}&id={GOODREADS_USERID}")
         root = ET.fromstring(resp.content)
@@ -44,7 +45,7 @@ class GoodreadsAPI(object):
         return Stat(
             stat_id="read_prev_year",
             description="Books I read last year",
-            value="<br>".join(titles),
+            value=titles
         )
 
     def get_currently_reading():
