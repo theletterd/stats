@@ -1,18 +1,20 @@
 MEMCACHED_PORT = 20583
 MEMCACHED_STATS_KEY = 'stats_app_stats'
 
+SQLALCHEMY_DATABASE_URI = 'sqlite:///./sqlite_database'
+
 WEIGHT_STAT_GROUPS = {
     'description': 'Weight (lbs)',
     'stat_group_id': 'weight_stats',
     'stat_groups': [
         ['weight_lbs_recent'],
         [
-            'weight_lbs_min_current_year', 
+            'weight_lbs_min_current_year',
             'weight_lbs_avg_current_year',
             'weight_lbs_max_current_year'
         ],
         [
-            'weight_lbs_min_prev_year', 
+            'weight_lbs_min_prev_year',
             'weight_lbs_avg_prev_year',
             'weight_lbs_max_prev_year',
         ]
@@ -41,7 +43,7 @@ MISC_STAT_GROUPS = {
             'wife_count',
             'married_years',
             'children_count',
-            'birkenstock_count',    
+            'birkenstock_count',
         ],
         [
             'piercings_current',

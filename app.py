@@ -1,28 +1,29 @@
 from flask import Flask
 from flask_login import LoginManager
 
-import secret
-
 login_manager = LoginManager()
 
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = secret.FLASK_SECRET_KEY
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object('config')
+    app.config.from_pyfile('config.py')
 
-    # TODO move to a config somewhere
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./sqlite_database'
-
-    from models import db
 
     with app.app_context():
+        from models import db
         db.init_app(app)
         db.create_all()
 
-    from models import bcrypt
-    bcrypt.init_app(app)
+        from models import bcrypt
+        bcrypt.init_app(app)
 
-    login_manager.init_app(app)
+        login_manager.init_app(app)
+
+        from home.oauth_apis import oauth
+        oauth.init_app(app)
+
 
 
     from home import home_app

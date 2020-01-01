@@ -3,8 +3,10 @@ import requests
 import xml.etree.ElementTree as ET
 
 from .exceptions import stat_exception_override
-from secret import GOODREADS_KEY
-from secret import GOODREADS_USERID
+from flask import current_app
+
+GOODREADS_KEY = current_app.config['GOODREADS_KEY']
+GOODREADS_USERID = current_app.config['GOODREADS_USERID']
 
 from models import Stat
 

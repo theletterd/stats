@@ -2,18 +2,16 @@ import datetime
 import requests
 
 from .exceptions import stat_exception_override
-from secret import STRAVA_CODE
-from secret import STRAVA_CLIENT_ID
-from secret import STRAVA_CLIENT_SECRET
+from flask import current_app
 
 from models import Stat
 
 class StravaAPI(object):
     def _get_token():
         payload = {
-            "code": STRAVA_CODE,
-            "client_id": STRAVA_CLIENT_ID,
-            "client_secret": STRAVA_CLIENT_SECRET,
+            "code": current_app.config['STRAVA_CODE'],
+            "client_id": current_app.config['STRAVA_CLIENT_ID'],
+            "client_secret": current_app.config['STRAVA_CLIENT_SECRET'],
             "grant_type": "authorization_code"
             }
 

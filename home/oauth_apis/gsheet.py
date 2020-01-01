@@ -2,7 +2,10 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 from .exceptions import stat_exception_override
-from secret import GSHEET_JSON_KEYFILE
+from flask import current_app
+
+GSHEET_JSON_KEYFILE = current_app.config['GSHEET_JSON_KEYFILE']
+
 from models import Stat
 
 # use creds to create a client to interact with the Google Drive API
