@@ -140,9 +140,7 @@ def oauth_login(name):
 @app.route('/authorize/<string:name>/')
 @login_required
 def authorize(name):
-    print(request)
     token = oauth.__getattr__(name).authorize_access_token(oauth_verifier=request.args.get('authorize'))
-    print(token)
     if name in current_app.config['OAUTH1_SERVICES']:
         model = OAuth1Token
     else:
