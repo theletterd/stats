@@ -20,7 +20,7 @@ def create_app():
         login_manager.init_app(app)
 
         from home.oauth_apis import oauth
-        oauth.init_app(app)
+    oauth.init_app(app)
 
 
 

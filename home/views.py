@@ -38,8 +38,12 @@ def index():
 @app.route("/authorized_apps")
 @login_required
 def authorized_apps():
-    strava_url = url_for("home.strava_login")
-    context = dict(strava_url=strava_url)
+    strava_url = url_for("home.oauth_login", name='strava')
+    gsheet_url = url_for("home.oauth_login", name='gsheet')
+    context = dict(
+        strava_url=strava_url,
+        gsheet_url=gsheet_url
+    )
     return render_template("authorised_apps.html", **context)
 
 
@@ -123,16 +127,16 @@ def _get_populated_stat_groups(raw_stats, stat_group):
 
 ### oauth logins
 
-@app.route('/oauth/strava/login')
+@app.route('/oauth/<string:name>/login')
 @login_required
-def strava_login():
-    redirect_uri = url_for('home.authorize', _external=True)
-    return oauth.strava.authorize_redirect(redirect_uri)
+def oauth_login(name):
+    redirect_uri = url_for('home.authorize', _external=True, name=name)
+    return oauth.__getattr__(name).authorize_redirect(redirect_uri)
 
-@app.route('/authorize')
+@app.route('/authorize/<string:name>/')
 @login_required
-def authorize():
-    name = 'strava'
-    token = oauth.strava.authorize_access_token()
+def authorize(name):
+    token = oauth.__getattr__(name).authorize_access_token()
+    print(token)
     OAuth2Token.upsert_token(name, token, current_user)
     return redirect('/')
