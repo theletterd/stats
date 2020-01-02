@@ -2,26 +2,25 @@ import datetime
 import requests
 
 from .exceptions import stat_exception_override
-from secret import STRAVA_CODE
-from secret import STRAVA_CLIENT_ID
-from secret import STRAVA_CLIENT_SECRET
+from flask import current_app
 
 from models import Stat
 
+from . import oauth
+oauth.register(
+    name='strava',
+    api_base_url='https://www.strava.com/api/v3/',
+    authorize_url='https://www.strava.com/oauth/authorize',
+    client_kwargs={'scope': 'activity:read_all'},
+    access_token_url='https://www.strava.com/oauth/token',
+    access_token_params={
+        "client_id": current_app.config['STRAVA_CLIENT_ID'],
+        "client_secret": current_app.config['STRAVA_CLIENT_SECRET'],
+    }
+)
+
+
 class StravaAPI(object):
-    def _get_token():
-        payload = {
-            "code": STRAVA_CODE,
-            "client_id": STRAVA_CLIENT_ID,
-            "client_secret": STRAVA_CLIENT_SECRET,
-            "grant_type": "authorization_code"
-            }
-
-        resp = requests.post("https://www.strava.com/oauth/token", data=payload)
-
-        token = resp.json()['access_token']
-        return token
-
 
     def _convert_metres_to_miles_safe(metres):
         if not metres:
@@ -29,14 +28,9 @@ class StravaAPI(object):
         return metres / 1609.0
 
     @classmethod
-    @stat_exception_override("strava")
     def get_stats(klass):
-        token = klass._get_token()
-
-        headers = {"Authorization": f"Bearer {token}"}
         params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
-        resp = requests.get("https://www.strava.com/api/v3/athlete/activities", headers=headers, params=params)
-
+        resp = oauth.strava.get('athlete/activities', params=params)
         stats = {}
 
         for activity in resp.json():

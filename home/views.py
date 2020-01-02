@@ -6,6 +6,7 @@ from flask import request
 from flask import url_for
 from flask import flash
 
+from flask_login import current_user
 from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
@@ -14,9 +15,11 @@ from .stat_collector import StatCollector
 import config
 
 from models import User
+from models import OAuth2Token
 
 app = Blueprint('home', __name__)
 
+from .oauth_apis import oauth
 
 
 ORDERED_STAT_GROUPS = [
@@ -27,12 +30,6 @@ ORDERED_STAT_GROUPS = [
     config.BOOK_STAT_GROUPS,
 ]
 
-@app.route("/boobs")
-@login_required
-def boobs():
-    return "( o  ) (  o )"
-
-
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -41,7 +38,9 @@ def index():
 @app.route("/authorized_apps")
 @login_required
 def authorized_apps():
-    return "authorised shit"
+    strava_url = url_for("home.strava_login")
+    context = dict(strava_url=strava_url)
+    return render_template("authorised_apps.html", **context)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -121,3 +120,19 @@ def _get_populated_stat_groups(raw_stats, stat_group):
 
     return populated_stat_groups
 
+
+### oauth logins
+
+@app.route('/oauth/strava/login')
+@login_required
+def strava_login():
+    redirect_uri = url_for('home.authorize', _external=True)
+    return oauth.strava.authorize_redirect(redirect_uri)
+
+@app.route('/authorize')
+@login_required
+def authorize():
+    name = 'strava'
+    token = oauth.strava.authorize_access_token()
+    OAuth2Token.upsert_token(name, token, current_user)
+    return redirect('/')
