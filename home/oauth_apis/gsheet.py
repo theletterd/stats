@@ -1,6 +1,5 @@
 from flask import current_app
 
-from .exceptions import stat_exception_override
 from models import Stat
 
 from . import oauth
@@ -25,7 +24,6 @@ oauth.register(
 class GoogleSheetsAPI(object):
 
     @classmethod
-    @stat_exception_override("google sheets")
     def get_stats(klass):
         resp = oauth.gsheet.get('values/Overall%20stats!A%3AD')
         values = resp.json()['values']

@@ -1,4 +1,5 @@
 from flask import Blueprint
+from flask import current_app
 from flask import jsonify
 from flask import redirect
 from flask import render_template
@@ -15,6 +16,7 @@ from .stat_collector import StatCollector
 import config
 
 from models import User
+from models import OAuth1Token
 from models import OAuth2Token
 
 app = Blueprint('home', __name__)
@@ -40,9 +42,11 @@ def index():
 def authorized_apps():
     strava_url = url_for("home.oauth_login", name='strava')
     gsheet_url = url_for("home.oauth_login", name='gsheet')
+    goodreads_url = url_for("home.oauth_login", name='goodreads')
     context = dict(
         strava_url=strava_url,
-        gsheet_url=gsheet_url
+        gsheet_url=gsheet_url,
+        goodreads_url=goodreads_url
     )
     return render_template("authorised_apps.html", **context)
 
@@ -136,7 +140,12 @@ def oauth_login(name):
 @app.route('/authorize/<string:name>/')
 @login_required
 def authorize(name):
-    token = oauth.__getattr__(name).authorize_access_token()
+    print(request)
+    token = oauth.__getattr__(name).authorize_access_token(oauth_verifier=request.args.get('authorize'))
     print(token)
-    OAuth2Token.upsert_token(name, token, current_user)
+    if name in current_app.config['OAUTH1_SERVICES']:
+        model = OAuth1Token
+    else:
+        model = OAuth2Token
+    model.upsert_token(name, token, current_user)
     return redirect('/')

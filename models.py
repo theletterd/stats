@@ -84,6 +84,39 @@ class User(db.Model):
         return str(self.id)
 
 
+class OAuth1Token(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40), nullable=False)
+    oauth_token = db.Column(db.String(200), nullable=False)
+    oauth_token_secret = db.Column(db.String(200), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("User")
+
+    def to_token(self):
+        return dict(
+            oauth_token=self.oauth_token,
+            oauth_token_secret=self.oauth_token_secret,
+        )
+
+    @staticmethod
+    def upsert_token(name, token, user):
+        # let's see if there's already a token.
+        token_obj = OAuth1Token.query.filter_by(
+            name=name,
+            user=user
+        ).first()
+
+        if not token_obj:
+            token_obj = OAuth1Token()
+            token_obj.name = name
+            token_obj.user = user
+        token_obj.oauth_token = token['oauth_token']
+        token_obj.oauth_token_secret = token['oauth_token_secret']
+
+        db.session.add(token_obj)
+        db.session.commit()
+
+
 class OAuth2Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
@@ -140,25 +173,23 @@ class OAuth2Token(db.Model):
         db.session.commit()
 
 
-    @staticmethod
-    def fetch_token(name):
-        default_user = User.get_default_user()
-        if not default_user:
-            return None
-        #if name in OAUTH1_SERVICES:
-        #    model = OAuth1Token
-        # else:
+def fetch_token(name):
+    default_user = User.get_default_user()
+    if not default_user:
+        return None
+    if name in current_app.config['OAUTH1_SERVICES']:
+        model = OAuth1Token
+    else:
         model = OAuth2Token
 
-        token = model.query.filter_by(
-            name=name,
-            user=default_user
-        ).first()
-
-        if token:
-            return token.to_token()
-        else:
-            return None
+    token = model.query.filter_by(
+        name=name,
+        user=default_user
+    ).first()
+    if token:
+        return token.to_token()
+    else:
+        return None
 
 # NOTE:
 # When querying in ipython, you can do:
