@@ -9,23 +9,18 @@ from models import Stat
 from . import oauth
 oauth.register(
     name='strava',
-    api_base_url='https://www.strava.com/api/v3/'
+    api_base_url='https://www.strava.com/api/v3/',
+    authorize_url='https://www.strava.com/oauth/authorize',
+    client_kwargs={'scope': 'activity:read_all'},
+    access_token_url='https://www.strava.com/oauth/token',
+    access_token_params={
+        "client_id": current_app.config['STRAVA_CLIENT_ID'],
+        "client_secret": current_app.config['STRAVA_CLIENT_SECRET'],
+    }
 )
 
 
 class StravaAPI(object):
-    def _get_token():
-        payload = {
-            "code": current_app.config['STRAVA_CODE'],
-            "client_id": current_app.config['STRAVA_CLIENT_ID'],
-            "client_secret": current_app.config['STRAVA_CLIENT_SECRET'],
-            "grant_type": "authorization_code"
-            }
-
-        resp = requests.post("https://www.strava.com/oauth/token", data=payload)
-
-        token = resp.json()
-        return token
 
     def _convert_metres_to_miles_safe(metres):
         if not metres:
@@ -34,9 +29,8 @@ class StravaAPI(object):
 
     @classmethod
     def get_stats(klass):
-        token = klass._get_token()
         params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
-        resp = oauth.strava.get('athlete/activities', token=token, params=params)
+        resp = oauth.strava.get('athlete/activities', params=params)
         stats = {}
 
         for activity in resp.json():

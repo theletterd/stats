@@ -6,6 +6,7 @@ from flask import request
 from flask import url_for
 from flask import flash
 
+from flask_login import current_user
 from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
@@ -14,9 +15,11 @@ from .stat_collector import StatCollector
 import config
 
 from models import User
+from models import OAuth2Token
 
 app = Blueprint('home', __name__)
 
+from .oauth_apis import oauth
 
 
 ORDERED_STAT_GROUPS = [
@@ -121,3 +124,19 @@ def _get_populated_stat_groups(raw_stats, stat_group):
 
     return populated_stat_groups
 
+
+### oauth logins
+
+@app.route('/oauth/strava/login')
+@login_required
+def strava_login():
+    redirect_uri = url_for('home.authorize', _external=True)
+    return oauth.strava.authorize_redirect(redirect_uri)
+
+@app.route('/authorize')
+@login_required
+def authorize():
+    name = 'strava'
+    token = oauth.strava.authorize_access_token()
+    OAuth2Token.upsert_token(name, token, current_user)
+    return redirect('/')
