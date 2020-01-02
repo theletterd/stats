@@ -24,8 +24,7 @@ class StatCollector(object):
         if not stats:
             stat_list = []
 
-            #stat_getter_methods = [GoodreadsAPI.get_stats, GoogleSheetsAPI.get_stats, StravaAPI.get_stats]
-            stat_getter_methods = [StravaAPI.get_stats]
+            stat_getter_methods = [GoodreadsAPI.get_stats, GoogleSheetsAPI.get_stats, StravaAPI.get_stats]
 
             for getter in stat_getter_methods:
                 try:
