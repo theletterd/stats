@@ -30,12 +30,6 @@ ORDERED_STAT_GROUPS = [
     config.BOOK_STAT_GROUPS,
 ]
 
-@app.route("/boobs")
-@login_required
-def boobs():
-    return "( o  ) (  o )"
-
-
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -44,7 +38,9 @@ def index():
 @app.route("/authorized_apps")
 @login_required
 def authorized_apps():
-    return "authorised shit"
+    strava_url = url_for("home.strava_login")
+    context = dict(strava_url=strava_url)
+    return render_template("authorised_apps.html", **context)
 
 
 @app.route("/login", methods=['GET', 'POST'])
