@@ -126,9 +126,9 @@ class OAuth2Token(db.Model):
     @staticmethod
     def update_token(name, token, refresh_token=None, access_token=None):
         if refresh_token:
-            item = OAuth2Token.find(name=name, refresh_token=refresh_token)
+            item = OAuth2Token.query.filter_by(name=name, refresh_token=refresh_token).first()
         elif access_token:
-            item = OAuth2Token.find(name=name, access_token=access_token)
+            item = OAuth2Token.query.filter_by(name=name, access_token=access_token).first()
         else:
             return
 
