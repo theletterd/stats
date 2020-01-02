@@ -1,8 +1,10 @@
 import json
+import logging
 
 from pymemcache.client.base import Client
 
 import config
+from models import Stat
 from .oauth_apis.goodreads import GoodreadsAPI
 from .oauth_apis.gsheet import GoogleSheetsAPI
 from .oauth_apis.strava import StravaAPI
@@ -24,14 +26,18 @@ class StatCollector(object):
         if not stats:
             stat_list = []
 
-            stat_getter_methods = [GoodreadsAPI.get_stats, GoogleSheetsAPI.get_stats, StravaAPI.get_stats]
-
+            stat_getter_methods = [GoogleSheetsAPI.get_stats, StravaAPI.get_stats]
+            stat_getter_methods.extend(GoodreadsAPI.get_stat_getters())
             for getter in stat_getter_methods:
                 try:
-                    stat_list.extend(getter())
+                    result = getter()
+                    if type(result) is Stat:
+                        stat_list.append(result)
+                    else:
+                        stat_list.extend(result)
                 except Exception as e:
                     errors.append(e)
-                    print(e)
+                    logging.exception(e)
 
             for stat in stat_list:
                 stats[stat.stat_id] = stat._asdict()

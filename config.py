@@ -3,7 +3,7 @@ MEMCACHED_STATS_KEY = 'stats_app_stats'
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///./sqlite_database'
 
-# OAUTH1_SERVICES = {'goodreads'}
+OAUTH1_SERVICES = {'goodreads'}
 
 WEIGHT_STAT_GROUPS = {
     'description': 'Weight (lbs)',

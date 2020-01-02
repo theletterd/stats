@@ -1,11 +1,18 @@
 import datetime
-import requests
 import xml.etree.ElementTree as ET
 
-from .exceptions import stat_exception_override
 from flask import current_app
 
-GOODREADS_KEY = current_app.config['GOODREADS_KEY']
+from . import oauth
+oauth.register(
+    name='goodreads',
+    request_token_url='https://www.goodreads.com/oauth/request_token',
+    access_token_url='https://www.goodreads.com/oauth/access_token',
+    authorize_url='https://www.goodreads.com/oauth/authorize',
+    api_base_url='https://www.goodreads.com/'
+)
+
+GOODREADS_KEY = current_app.config['GOODREADS_CLIENT_ID']
 GOODREADS_USERID = current_app.config['GOODREADS_USERID']
 
 from models import Stat
@@ -14,27 +21,30 @@ class GoodreadsAPI(object):
 
     def get_books_read_this_year():
         current_year = datetime.date.today().year
-        resp = requests.get(f"https://www.goodreads.com/review/list?key={GOODREADS_KEY}&v=2&read_at={current_year}&id={GOODREADS_USERID}")
-        root = ET.fromstring(resp.content)
-
-        books = root.findall('./reviews/review/book')
-        titles = []
-        for book in books:
-            title = book.findall('./title')[0].text
-            author = book.findall('./authors/author/name')[0].text
-            titles.append(f"{title} - {author}")
-
         return Stat(
             stat_id="read_current_year",
             description="Books I read this year",
-            value=titles
+            value=GoodreadsAPI._get_book_titles_for_year(current_year)
         )
-
 
     def get_books_read_last_year():
         # TODO this is almost identical to get_books_read_this_year, needs refactoring.
         year = datetime.date.today().year - 1
-        resp = requests.get(f"https://www.goodreads.com/review/list?key={GOODREADS_KEY}&v=2&read_at={year}&id={GOODREADS_USERID}")
+        return Stat(
+            stat_id="read_prev_year",
+            description="Books I read last year",
+            value=GoodreadsAPI._get_book_titles_for_year(year)
+        )
+
+    def _get_book_titles_for_year(year):
+        params = {
+            'read_at': year,
+            'v': '2',
+            'key': GOODREADS_KEY,
+            'id': GOODREADS_USERID,
+            'format': 'xml'
+        }
+        resp = oauth.goodreads.get('review/list', params=params)
         root = ET.fromstring(resp.content)
 
         books = root.findall('./reviews/review/book')
@@ -44,14 +54,18 @@ class GoodreadsAPI(object):
             author = book.findall('./authors/author/name')[0].text
             titles.append(f"{title} - {author}")
 
-        return Stat(
-            stat_id="read_prev_year",
-            description="Books I read last year",
-            value=titles
-        )
+        return titles
 
     def get_currently_reading():
-        resp = requests.get(f"https://www.goodreads.com/review/list?key={GOODREADS_KEY}&v=2&shelf=currently-reading&id={GOODREADS_USERID}")
+        params = {
+            'v': '2',
+            'key': GOODREADS_KEY,
+            'id': GOODREADS_USERID,
+            'format': 'xml',
+            'shelf': 'currently-reading'
+
+        }
+        resp = oauth.goodreads.get('review/list', params=params)
         root = ET.fromstring(resp.content)
         title = root.findall("./reviews/review/book/title")[0].text
 
@@ -61,14 +75,11 @@ class GoodreadsAPI(object):
             value=title
         )
 
-
-
     @classmethod
-    @stat_exception_override("goodreads")
-    def get_stats(klass):
-        stats = [
-            klass.get_currently_reading(),
-            klass.get_books_read_this_year(),
-            klass.get_books_read_last_year()
+    def get_stat_getters(klass):
+        stat_getters = [
+            klass.get_currently_reading,
+            klass.get_books_read_this_year,
+            klass.get_books_read_last_year
         ]
-        return stats
+        return stat_getters
