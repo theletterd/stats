@@ -1,5 +1,4 @@
 import datetime
-import requests
 
 from .exceptions import stat_exception_override
 from flask import current_app
@@ -11,7 +10,7 @@ oauth.register(
     name='strava',
     api_base_url='https://www.strava.com/api/v3/',
     authorize_url='https://www.strava.com/oauth/authorize',
-    client_kwargs={'scope': 'activity:read_all'},
+    authorize_params={'scope': 'activity:read_all'},
     access_token_url='https://www.strava.com/oauth/token',
     access_token_params={
         "client_id": current_app.config['STRAVA_CLIENT_ID'],

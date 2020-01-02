@@ -1,12 +1,30 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from flask import current_app
 
 from .exceptions import stat_exception_override
-from flask import current_app
 
 GSHEET_JSON_KEYFILE = current_app.config['GSHEET_JSON_KEYFILE']
 
 from models import Stat
+
+from . import oauth
+oauth.register(
+    name='gsheet',
+    api_base_url='',
+    # used to get a user's permissions
+    authorize_url='https://accounts.google.com/o/oauth2/v2/auth',
+    authorize_params={
+        'scope': 'https://www.googleapis.com/auth/spreadsheets.readonly',
+        'access_type': 'offline'
+    },
+    # used for getting the token
+    access_token_url='https://oauth2.googleapis.com/token',
+    access_token_params={
+        'client_id': current_app.config['GSHEET_CLIENT_ID'],
+        'client_secret': current_app.config['GSHEET_CLIENT_SECRET'],
+    }
+)
 
 # use creds to create a client to interact with the Google Drive API
 scope = ["https://spreadsheets.google.com/feeds",
