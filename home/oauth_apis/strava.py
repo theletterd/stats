@@ -28,6 +28,7 @@ class StravaAPI(object):
         return metres / 1609.0
 
     @classmethod
+    @stat_exception_override("goodreads")
     def get_stats(klass):
         params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
         resp = oauth.strava.get('athlete/activities', params=params)
