@@ -43,10 +43,12 @@ def authorized_apps():
     strava_url = url_for("home.oauth_login", name='strava')
     gsheet_url = url_for("home.oauth_login", name='gsheet')
     goodreads_url = url_for("home.oauth_login", name='goodreads')
+    googlefit_url = url_for("home.oauth_login", name='googlefit')
     context = dict(
         strava_url=strava_url,
         gsheet_url=gsheet_url,
-        goodreads_url=goodreads_url
+        goodreads_url=goodreads_url,
+        googlefit_url=googlefit_url
     )
     return render_template("authorised_apps.html", **context)
 
