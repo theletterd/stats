@@ -1,3 +1,6 @@
+import datetime
+from itertools import islice, chain
+
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
@@ -15,9 +18,12 @@ from flask_login import logout_user
 from .stat_collector import StatCollector
 import config
 
+from .oauth_apis.googlefit import GoogleFitAPI
+
 from models import User
 from models import OAuth1Token
 from models import OAuth2Token
+from models import GoogleFitData
 
 app = Blueprint('home', __name__)
 
@@ -36,6 +42,10 @@ ORDERED_STAT_GROUPS = [
 def index():
     return render_template('index.html')
 
+def chunks(iterable, n):
+    iterator = iter(iterable)
+    for first in iterator:
+        yield chain([first], islice(iterator, n - 1))
 
 @app.route("/authorized_apps")
 @login_required
@@ -44,11 +54,17 @@ def authorized_apps():
     gsheet_url = url_for("home.oauth_login", name='gsheet')
     goodreads_url = url_for("home.oauth_login", name='goodreads')
     googlefit_url = url_for("home.oauth_login", name='googlefit')
+    missing_dates = GoogleFitData.days_missing(current_user)
+
+    date_chunk_iterator = chunks(missing_dates, 20)
+    date_chunks = [list(x) for x in date_chunk_iterator]
     context = dict(
         strava_url=strava_url,
         gsheet_url=gsheet_url,
         goodreads_url=goodreads_url,
-        googlefit_url=googlefit_url
+        googlefit_url=googlefit_url,
+        missing_dates=missing_dates,
+        date_chunks=date_chunks
     )
     return render_template("authorised_apps.html", **context)
 
@@ -131,6 +147,28 @@ def _get_populated_stat_groups(raw_stats, stat_group):
     return populated_stat_groups
 
 
+@app.route('/googlefit_date', methods=["POST"])
+@login_required
+def populate_googlefit_dates():
+    dates = request.form.getlist("date")
+    for date in dates:
+        date = datetime.date.fromisoformat(date)
+        missing_dates = GoogleFitData.days_missing(current_user)
+
+        if date in missing_dates:
+            try:
+                step_count, distance_metres, weight_kg = GoogleFitAPI.get_stats_for_date(date)
+                GoogleFitData.upsert(
+                    current_user,
+                    date,
+                    step_count,
+                    distance_metres,
+                    weight_kg
+                    )
+            except:
+                pass
+    return "naw"
+
 ### oauth logins
 
 @app.route('/oauth/<string:name>/login')
@@ -138,6 +176,7 @@ def _get_populated_stat_groups(raw_stats, stat_group):
 def oauth_login(name):
     redirect_uri = url_for('home.authorize', _external=True, name=name)
     return oauth.__getattr__(name).authorize_redirect(redirect_uri)
+
 
 @app.route('/authorize/<string:name>/')
 @login_required

@@ -15,6 +15,30 @@
     </div>
     <div>
       <a href="{{googlefit_url}}">Googlefit auth</a>
+      <div>
+	{% for date_chunk in date_chunks %}
+	    <form class="date-submit-form" action="/googlefit_date" method="post">
+	      {% for date in date_chunk %}
+	      <input type="hidden" name="date" value="{{date}}" />
+	      {% endfor %}
+	      <input class="btn btn-lg btn-primary btn-block" type="submit" value="{% for date in date_chunk %}{{ date }} {% endfor %}" />
+	    </form><br>
+	{% endfor %}
+	<script>
+	  $('form.date-submit-form').on('submit', function(e) {
+	      e.preventDefault();
+       	      console.log($(this).serialize());
+	      var url = $(this).attr('action');
+	      console.log(url);
+              fetch(url, {
+	          method: "POST",
+                  body: new URLSearchParams($(this).serialize())
+	      }).then(function(){
+	          console.log("noop");
+	      });
+	  });
+	</script>
+      </div>
     </div>
   </div>
 

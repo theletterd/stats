@@ -68,10 +68,12 @@ class GoogleFitAPI(object):
 
         for bucket in json_response['bucket']:
             steps_datapoints = bucket['dataset'][0]['point']
-            steps += steps_datapoints[0]['value'][0]['intVal']
+            if steps_datapoints:
+                steps += steps_datapoints[0]['value'][0]['intVal']
 
             distance_datapoints = bucket['dataset'][2]['point']
-            distance_metres += distance_datapoints[0]['value'][0]['fpVal']
+            if distance_datapoints:
+                distance_metres += distance_datapoints[0]['value'][0]['fpVal']
 
         weight_datapoints = json_response['bucket'][0]['dataset'][1]['point']
         if weight_datapoints:
