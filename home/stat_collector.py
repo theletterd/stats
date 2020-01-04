@@ -8,6 +8,7 @@ from models import Stat
 from .oauth_apis.goodreads import GoodreadsAPI
 from .oauth_apis.gsheet import GoogleSheetsAPI
 from .oauth_apis.strava import StravaAPI
+from .oauth_apis.googlefit import GoogleFitAPI
 
 memcached_client = Client(("localhost", config.MEMCACHED_PORT))
 
@@ -26,7 +27,7 @@ class StatCollector(object):
         if not stats:
             stat_list = []
 
-            stat_getter_methods = [GoogleSheetsAPI.get_stats, StravaAPI.get_stats]
+            stat_getter_methods = [GoogleSheetsAPI.get_stats, StravaAPI.get_stats, GoogleFitAPI.get_stats]
             stat_getter_methods.extend(GoodreadsAPI.get_stat_getters())
             for getter in stat_getter_methods:
                 try:
