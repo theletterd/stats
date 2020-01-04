@@ -3,6 +3,7 @@ from datetime import timedelta
 import time
 
 from flask import current_app
+from models import fetch_token
 
 from . import oauth
 oauth.register(
@@ -25,8 +26,11 @@ oauth.register(
 
 class GoogleFitAPI(object):
 
-    def get_stats_for_date(date):
+    def get_stats_for_date(date, user):
         assert type(date) is datetime.date
+
+        token = fetch_token('googlefit', user)
+
         start_date = datetime.datetime(date.year, date.month, date.day)
         end_date = start_date + timedelta(days=1)
 
@@ -57,7 +61,7 @@ class GoogleFitAPI(object):
             "startTimeMillis": start_time * 1000,
             "endTimeMillis": end_time * 1000
         }
-        resp = oauth.googlefit.post('me/dataset:aggregate', json=params)
+        resp = oauth.googlefit.post('me/dataset:aggregate', json=params, token=token)
         json_response = resp.json()
 
         steps = 0

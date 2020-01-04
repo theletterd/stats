@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 from app import login_manager
+from tools import util
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -102,10 +103,7 @@ class GoogleFitData(db.Model):
         end_date = datetime.date.today()
 
         start_date = datetime.date(end_date.year - 1, 1, 1)
-        expected_dates = set()
-        while end_date >= start_date:
-            expected_dates.add(end_date)
-            end_date = end_date - datetime.timedelta(days=1)
+        expected_dates = set(util.get_dates_between(start_date, end_date))
 
         # ok now we query the database for all the dates that we have
         # We could probably filter by start/end dates here
@@ -147,7 +145,6 @@ class GoogleFitData(db.Model):
         return data
 
     def get_data_for_day(user, date):
-
         data = GoogleFitData.query.filter_by(
             user=user,
             date=date
@@ -263,10 +260,10 @@ class OAuth2Token(db.Model):
         db.session.commit()
 
 
-def fetch_token(name):
-    default_user = User.get_default_user()
-    if not default_user:
-        return None
+def fetch_token(name, user=None):
+    if user is None:
+        user = User.get_default_user()
+
     if name in current_app.config['OAUTH1_SERVICES']:
         model = OAuth1Token
     else:
@@ -274,7 +271,7 @@ def fetch_token(name):
 
     token = model.query.filter_by(
         name=name,
-        user=default_user
+        user=user
     ).first()
     if token:
         return token.to_token()

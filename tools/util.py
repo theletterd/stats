@@ -1,6 +1,17 @@
+import datetime
 
 def convert_kg_to_lbs(kg):
     return kg / 0.454
 
 def convert_metres_to_miles(metres):
     return metres / 1609.0
+
+def get_dates_between(start_date, end_date):
+    assert start_date <= end_date
+
+    dates = []
+    while start_date <= end_date:
+        dates.append(start_date)
+        start_date = start_date + datetime.timedelta(days=1)
+
+    return dates
