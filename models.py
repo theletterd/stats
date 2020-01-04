@@ -1,5 +1,6 @@
 from collections import namedtuple
 import datetime
+from tools.util import today_pacific
 
 
 from flask import current_app
@@ -100,7 +101,7 @@ class GoogleFitData(db.Model):
     def days_missing(user):
         # we should have days for all of the previous year, and
         # all days this year so far.
-        end_date = datetime.date.today()
+        end_date = today_pacific()
 
         start_date = datetime.date(end_date.year - 1, 1, 1)
         expected_dates = set(util.get_dates_between(start_date, end_date))

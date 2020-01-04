@@ -1,4 +1,5 @@
 import datetime
+from config import DEFAULT_TIMEZONE
 
 def convert_kg_to_lbs(kg):
     return kg / 0.454
@@ -15,3 +16,10 @@ def get_dates_between(start_date, end_date):
         start_date = start_date + datetime.timedelta(days=1)
 
     return dates
+
+def datetime_today_pacific():
+    pacific_datetime = datetime.datetime.now(tz=DEFAULT_TIMEZONE)
+    return pacific_datetime
+
+def today_pacific():
+    return datetime_today_pacific().date()

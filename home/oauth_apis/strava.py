@@ -1,5 +1,6 @@
 import datetime
 from flask import current_app
+from tools.util import today_pacific
 
 from models import Stat
 
@@ -60,7 +61,7 @@ class StravaAPI(object):
             stats[year]['distance_run_metres'] += distance_metres
 
         # construct stats
-        current_year = datetime.date.today().year
+        current_year = today_pacific().year
         prev_year = current_year - 1
 
         distance_current_year = klass._convert_metres_to_miles_safe(stats.get(current_year ,{}).get('distance_run_metres', 0))

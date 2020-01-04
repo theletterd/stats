@@ -4,7 +4,7 @@ from models import GoogleFitData
 from models import Stat
 from tools.util import convert_kg_to_lbs
 from tools.util import convert_metres_to_miles
-
+from tools.util import today_pacific
 
 class GoogleFitStats(object):
 
@@ -18,11 +18,11 @@ class GoogleFitStats(object):
         ]
 
     def _get_stats_for_current_year(user):
-        year = datetime.date.today().year
+        year = today_pacific().year
         return GoogleFitStats._get_stats_for_year(user, year, "This year", "current_year")
 
     def _get_stats_for_prev_year(user):
-        year = datetime.date.today().year - 1
+        year = today_pacific().year - 1
         return GoogleFitStats._get_stats_for_year(user, year, "Last Year", "prev_year")
 
     def _get_stats_for_year(user, year, display_str, stat_str):
@@ -92,7 +92,7 @@ class GoogleFitStats(object):
 
     def _get_recent_stats(user):
         stats = []
-        today = datetime.date.today()
+        today = today_pacific()
         yesterday = today - datetime.timedelta(days=1)
 
         data_today = GoogleFitData.get_data_for_day(user, today)
