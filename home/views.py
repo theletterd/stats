@@ -1,4 +1,5 @@
 import datetime
+import logging
 from itertools import islice, chain
 
 from flask import Blueprint
@@ -158,17 +159,17 @@ def populate_googlefit_dates():
 
         if date in missing_dates:
             try:
-                step_count, distance_metres, weight_kg = GoogleFitAPI.get_stats_for_date(date)
+                step_count, distance_metres, weight_kg = GoogleFitAPI.get_stats_for_date(date, current_user)
                 GoogleFitData.upsert(
                     current_user,
                     date,
                     step_count,
                     distance_metres,
                     weight_kg
-                    )
-            except:
-                pass
-    return "naw"
+                )
+            except Exception as e:
+                logging.exception(e)
+    return ""
 
 ### oauth logins
 
