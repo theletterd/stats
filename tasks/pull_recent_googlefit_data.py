@@ -16,7 +16,7 @@ parser.add_argument("--end-date", type=date_parser, help="YYYY-MM-DD, date to pu
 
 args = parser.parse_args()
 
-end_date = args.end_date or datetime.date.today()
+end_date = args.end_date or util.today_pacific()
 start_date = args.start_date or (end_date - datetime.timedelta(days=1))
 dates = util.get_dates_between(start_date, end_date)
 user_id = args.user_id

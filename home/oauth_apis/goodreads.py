@@ -1,5 +1,5 @@
-import datetime
 import xml.etree.ElementTree as ET
+from tools.util import today_pacific
 
 from flask import current_app
 
@@ -20,7 +20,7 @@ from models import Stat
 class GoodreadsAPI(object):
 
     def get_books_read_this_year():
-        current_year = datetime.date.today().year
+        current_year = today_pacific.year
         return Stat(
             stat_id="read_current_year",
             description="Books I read this year",
@@ -29,7 +29,7 @@ class GoodreadsAPI(object):
 
     def get_books_read_last_year():
         # TODO this is almost identical to get_books_read_this_year, needs refactoring.
-        year = datetime.date.today().year - 1
+        year = today_pacific.year - 1
         return Stat(
             stat_id="read_prev_year",
             description="Books I read last year",
