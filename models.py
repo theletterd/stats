@@ -1,4 +1,6 @@
 from collections import namedtuple
+import datetime
+
 
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
@@ -84,12 +86,63 @@ class User(db.Model):
         return str(self.id)
 
 
+class GoogleFitData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship("User")
+    date = db.Column(db.Date, nullable=False)
+    step_count = db.Column(db.Integer)
+    distance_metres = db.Column(db.Numeric)
+    weight_kg = db.Column(db.Numeric)
+    __tableargs__ = (db.UniqueConstraint(user_id, date))
+
+    def days_missing(user):
+        # we should have days for all of the previous year, and
+        # all days this year so far.
+        end_date = datetime.date.today()
+
+        start_date = datetime.date(end_date.year - 1, 1, 1)
+        expected_dates = set()
+        while end_date >= start_date:
+            expected_dates.add(end_date)
+            end_date = end_date - datetime.timedelta(days=1)
+
+        # ok now we query the database for all the dates that we have
+        # We could probably filter by start/end dates here
+        data_objs = GoogleFitData.query.filter_by(
+            user=user
+            ).all()
+
+        for data_obj in data_objs:
+            if data_obj.date in expected_dates:
+                expected_dates.remove(data_obj.date)
+        return expected_dates
+
+    def upsert(user, date, step_count, distance_metres, weight_kg):
+        fit_obj = GoogleFitData.query.filter_by(
+            user=user,
+            date=date
+        ).first()
+
+        if not fit_obj:
+            fit_obj = GoogleFitData()
+            fit_obj.user = user
+            fit_obj.date = date
+        fit_obj.step_count = step_count
+        fit_obj.weight_kg = weight_kg
+        fit_obj.distance_metres = distance_metres
+
+        db.session.add(fit_obj)
+        db.session.commit()
+        return fit_obj
+
+
 class OAuth1Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     oauth_token = db.Column(db.String(200), nullable=False)
     oauth_token_secret = db.Column(db.String(200), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship("User")
 
     def to_token(self):
