@@ -20,7 +20,7 @@ from models import Stat
 class GoodreadsAPI(object):
 
     def get_books_read_this_year():
-        current_year = today_pacific.year
+        current_year = today_pacific().year
         return Stat(
             stat_id="read_current_year",
             description="Books I read this year",
@@ -28,8 +28,7 @@ class GoodreadsAPI(object):
         )
 
     def get_books_read_last_year():
-        # TODO this is almost identical to get_books_read_this_year, needs refactoring.
-        year = today_pacific.year - 1
+        year = today_pacific().year - 1
         return Stat(
             stat_id="read_prev_year",
             description="Books I read last year",
