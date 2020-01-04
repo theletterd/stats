@@ -31,7 +31,8 @@ class GoogleFitAPI(object):
 
         token = fetch_token('googlefit', user)
 
-        start_date = datetime.datetime(date.year, date.month, date.day, tz=current_app.config['DEFAULT_TIMEZONE'])
+        pdt = current_app.config['DEFAULT_TIMEZONE']
+        start_date = pdt.localize(datetime.datetime(date.year, date.month, date.day))
         end_date = start_date + timedelta(days=1)
 
         start_time = int(start_date.timestamp())
