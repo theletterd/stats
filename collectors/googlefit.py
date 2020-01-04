@@ -83,7 +83,7 @@ class GoogleFitStats(object):
         if weight_kg:
             weight_lbs = convert_kg_to_lbs(weight_kg)
             return Stat(
-                stat_id='weight_recent_lbs',
+                stat_id='weight_lbs_recent',
                 description="Recent Weight (lbs)",
                 value=f"{weight_lbs:.1f}"
             )
