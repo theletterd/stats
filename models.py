@@ -92,8 +92,8 @@ class GoogleFitData(db.Model):
     user = db.relationship("User")
     date = db.Column(db.Date, nullable=False)
     step_count = db.Column(db.Integer)
-    distance_metres = db.Column(db.Numeric)
-    weight_kg = db.Column(db.Numeric)
+    distance_metres = db.Column(db.Float)
+    weight_kg = db.Column(db.Float)
     __tableargs__ = (db.UniqueConstraint(user_id, date))
 
     def days_missing(user):
@@ -117,6 +117,43 @@ class GoogleFitData(db.Model):
             if data_obj.date in expected_dates:
                 expected_dates.remove(data_obj.date)
         return expected_dates
+
+    def get_most_recent_weight(user):
+        datum = GoogleFitData.query.filter_by(
+            user=user
+        ).filter(
+            GoogleFitData.weight_kg != None
+        ).order_by(
+            GoogleFitData.date.desc()
+        ).limit(1).first()
+
+        if datum:
+            return datum.weight_kg
+
+        return None
+
+    def get_data_for_year(user, year):
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+
+        data = GoogleFitData.query.filter_by(
+            user=user
+        ).filter(
+            GoogleFitData.date >= start_date
+        ).filter(
+            GoogleFitData.date <= end_date
+        ).all()
+
+        return data
+
+    def get_data_for_day(user, date):
+
+        data = GoogleFitData.query.filter_by(
+            user=user,
+            date=date
+        ).first()
+
+        return data
 
     def upsert(user, date, step_count, distance_metres, weight_kg):
         fit_obj = GoogleFitData.query.filter_by(
