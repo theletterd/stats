@@ -5,11 +5,12 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///./sqlite_database'
 
 OAUTH1_SERVICES = {'goodreads'}
 
+
 WEIGHT_STAT_GROUPS = {
     'description': 'Weight (lbs)',
     'stat_group_id': 'weight_stats',
     'stat_groups': [
-        ['weight_recent'],
+        ['weight_recent_lbs'],
         [
             'weight_lbs_min_current_year',
             'weight_lbs_avg_current_year',

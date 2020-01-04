@@ -21,12 +21,15 @@ class StatCollector(object):
         errors = []
 
         # attempt to get stats from memcached
+        # TODO we can probably does this on a per-stat (or per type?) basis, instead of for everything?
+        # also by user.... yeesh.
+        # also we need a way to hard-refresh.
         stats = StatCollector._load_stats_from_memcached()
 
         # can we run these concurrently?
         if not stats:
             stat_list = [
-                GoogleFitStats.get_most_recent_weight(user)
+                *GoogleFitStats.get_stats(user)
             ]
 
             stat_getter_methods = [

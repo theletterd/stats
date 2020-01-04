@@ -146,6 +146,15 @@ class GoogleFitData(db.Model):
 
         return data
 
+    def get_data_for_day(user, date):
+
+        data = GoogleFitData.query.filter_by(
+            user=user,
+            date=date
+        ).first()
+
+        return data
+
     def upsert(user, date, step_count, distance_metres, weight_kg):
         fit_obj = GoogleFitData.query.filter_by(
             user=user,
