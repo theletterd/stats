@@ -4,8 +4,6 @@ import time
 
 from flask import current_app
 
-from models import Stat
-
 from . import oauth
 oauth.register(
     name='googlefit',

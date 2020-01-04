@@ -8,7 +8,7 @@ from models import Stat
 from .oauth_apis.goodreads import GoodreadsAPI
 from .oauth_apis.gsheet import GoogleSheetsAPI
 from .oauth_apis.strava import StravaAPI
-from .oauth_apis.googlefit import GoogleFitAPI
+from collectors.googlefit import GoogleFitStats
 
 memcached_client = Client(("localhost", config.MEMCACHED_PORT))
 
@@ -16,7 +16,7 @@ memcached_client = Client(("localhost", config.MEMCACHED_PORT))
 class StatCollector(object):
 
     @staticmethod
-    def get_collected_stats():
+    def get_collected_stats(user):
         stats = {}
         errors = []
 
@@ -25,9 +25,14 @@ class StatCollector(object):
 
         # can we run these concurrently?
         if not stats:
-            stat_list = []
+            stat_list = [
+                GoogleFitStats.get_most_recent_weight(user)
+            ]
 
-            stat_getter_methods = [GoogleSheetsAPI.get_stats, StravaAPI.get_stats, GoogleFitAPI.get_stats]
+            stat_getter_methods = [
+                GoogleSheetsAPI.get_stats,
+                StravaAPI.get_stats,
+            ]
             stat_getter_methods.extend(GoodreadsAPI.get_stat_getters())
             for getter in stat_getter_methods:
                 try:
@@ -45,7 +50,6 @@ class StatCollector(object):
 
         # attempt to push stats back to memcached
         StatCollector._dump_stats_to_memcached(stats)
-
         return stats, errors
 
     @staticmethod

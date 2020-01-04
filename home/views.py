@@ -101,7 +101,8 @@ def logout():
 
 @app.route("/data")
 def data():
-    raw_stats, errors = StatCollector.get_collected_stats()
+    user = User.get_default_user()
+    raw_stats, errors = StatCollector.get_collected_stats(user)
 
     # format the errors.
     error_messages = [str(e) for e in errors]

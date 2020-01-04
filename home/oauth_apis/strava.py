@@ -32,7 +32,6 @@ oauth.register(
     compliance_fix=_strava_compliance_fix
 )
 
-#print(_client)
 
 class StravaAPI(object):
 

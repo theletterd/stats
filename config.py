@@ -9,7 +9,7 @@ WEIGHT_STAT_GROUPS = {
     'description': 'Weight (lbs)',
     'stat_group_id': 'weight_stats',
     'stat_groups': [
-        ['weight_lbs_recent'],
+        ['weight_recent'],
         [
             'weight_lbs_min_current_year',
             'weight_lbs_avg_current_year',
