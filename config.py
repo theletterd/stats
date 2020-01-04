@@ -1,7 +1,3 @@
-import pytz
-
-DEFAULT_TIMEZONE = pytz.timezone('US/Pacific')
-
 MEMCACHED_PORT = 20583
 MEMCACHED_STATS_KEY = 'stats_app_stats'
 

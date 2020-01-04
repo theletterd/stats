@@ -4,6 +4,7 @@ import time
 
 from flask import current_app
 from models import fetch_token
+from tools.util import pdt
 
 from . import oauth
 oauth.register(
@@ -31,7 +32,6 @@ class GoogleFitAPI(object):
 
         token = fetch_token('googlefit', user)
 
-        pdt = current_app.config['DEFAULT_TIMEZONE']
         start_date = pdt.localize(datetime.datetime(date.year, date.month, date.day))
         end_date = start_date + timedelta(days=1)
 

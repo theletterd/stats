@@ -1,5 +1,6 @@
 import datetime
-from config import DEFAULT_TIMEZONE
+import pytz
+pdt = pytz.timezone('US/Pacific')
 
 def convert_kg_to_lbs(kg):
     return kg / 0.454
@@ -18,7 +19,7 @@ def get_dates_between(start_date, end_date):
     return dates
 
 def datetime_today_pacific():
-    return datetime.datetime.utcnow().astimezone(DEFAULT_TIMEZONE)
+    return datetime.datetime.utcnow().astimezone(pdt)
 
 def today_pacific():
     return datetime_today_pacific().date()
