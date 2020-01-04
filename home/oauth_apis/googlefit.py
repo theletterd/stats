@@ -80,8 +80,3 @@ class GoogleFitAPI(object):
             weight_kg = weight_datapoints[0]['value'][0]['fpVal']
 
         return steps, distance_metres, weight_kg
-
-    @classmethod
-    def get_stats(klass):
-        # we should read these from the database
-        return []

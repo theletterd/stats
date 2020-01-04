@@ -118,6 +118,18 @@ class GoogleFitData(db.Model):
                 expected_dates.remove(data_obj.date)
         return expected_dates
 
+    def get_data_for_year(year):
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+
+        data = GoogleFitData.query.filter(
+            GoogleFitData.date >= start_date
+            ).filter(
+            GoogleFitData.date <= end_date
+        ).all()
+
+        return data
+
     def upsert(user, date, step_count, distance_metres, weight_kg):
         fit_obj = GoogleFitData.query.filter_by(
             user=user,
