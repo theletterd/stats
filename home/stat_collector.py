@@ -28,19 +28,18 @@ class StatCollector(object):
 
         # can we run these concurrently?
         if not stats:
-            stat_list = [
-                *GoogleFitStats.get_stats(user),
-                 *StravaStats.get_stats(user),
-                 *GoodreadsStats.get_stats(user),
-                *GoogleSheetsStats.get_stats(user)
-            ]
+            stat_list = []
 
             stat_getter_methods = [
+                GoogleFitStats.get_stats,
+                StravaStats.get_stats,
+                GoodreadsStats.get_stats,
+                GoogleSheetsStats.get_stats,
             ]
 
             for getter in stat_getter_methods:
                 try:
-                    result = getter()
+                    result = getter(user)
                     if type(result) is Stat:
                         stat_list.append(result)
                     else:
@@ -56,6 +55,7 @@ class StatCollector(object):
         StatCollector._dump_stats_to_memcached(stats)
         return stats, errors
 
+    # TODO make these into a decorator
     @staticmethod
     def _load_stats_from_memcached():
         stats = {}
