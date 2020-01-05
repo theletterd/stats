@@ -19,12 +19,12 @@ def create_app():
 
         login_manager.init_app(app)
 
-        from home.oauth_apis import oauth
-    oauth.init_app(app)
+        from oauth_apis import oauth
+        oauth.init_app(app)
 
 
 
-    from home import home_app
+        from home import home_app
     app.register_blueprint(home_app)
 
     return app

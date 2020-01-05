@@ -6,7 +6,10 @@ def convert_kg_to_lbs(kg):
     return kg / 0.454
 
 def convert_metres_to_miles(metres):
+    if not metres:
+        return 0
     return metres / 1609.0
+
 
 def get_dates_between(start_date, end_date):
     assert start_date <= end_date
