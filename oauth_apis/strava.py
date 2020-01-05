@@ -34,7 +34,7 @@ oauth.register(
 
 class StravaAPI(object):
 
-    def get_stats(user):
+    def get_run_data(user):
         token = fetch_token('strava', user)
 
         params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
