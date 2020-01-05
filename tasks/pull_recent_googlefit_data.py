@@ -3,8 +3,8 @@ import datetime
 import logging
 
 import app as _app
-from models import User
-from models import GoogleFitData
+from models.user import User
+from models.googlefit import GoogleFitData
 from tools import util
 
 date_parser = lambda s: datetime.date.fromisoformat(s)

@@ -1,9 +1,11 @@
 import xml.etree.ElementTree as ET
-from tools.util import today_pacific
 
 from flask import current_app
 
+from models.stat import Stat
+from tools.util import today_pacific
 from . import oauth
+
 oauth.register(
     name='goodreads',
     request_token_url='https://www.goodreads.com/oauth/request_token',
@@ -15,7 +17,6 @@ oauth.register(
 GOODREADS_KEY = current_app.config['GOODREADS_CLIENT_ID']
 GOODREADS_USERID = current_app.config['GOODREADS_USERID']
 
-from models import Stat
 
 class GoodreadsAPI(object):
 

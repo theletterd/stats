@@ -1,6 +1,6 @@
 from flask import current_app
 
-from models import Stat
+from models.stat import Stat
 
 from . import oauth
 oauth.register(

@@ -3,7 +3,8 @@ from datetime import timedelta
 import time
 
 from flask import current_app
-from models import fetch_token
+
+from models.oauth import fetch_token
 from tools.util import pdt
 
 from . import oauth

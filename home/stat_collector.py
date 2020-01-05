@@ -4,7 +4,7 @@ import logging
 from pymemcache.client.base import Client
 
 import config
-from models import Stat
+from models.stat import Stat
 from .oauth_apis.goodreads import GoodreadsAPI
 from .oauth_apis.gsheet import GoogleSheetsAPI
 from .oauth_apis.strava import StravaAPI

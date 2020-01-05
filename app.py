@@ -14,7 +14,7 @@ def create_app():
         db.init_app(app)
         db.create_all()
 
-        from models import bcrypt
+        from models.user import bcrypt
         bcrypt.init_app(app)
 
         login_manager.init_app(app)
