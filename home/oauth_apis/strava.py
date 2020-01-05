@@ -1,9 +1,9 @@
 import datetime
+
 from flask import current_app
+
+from models.stat import Stat
 from tools.util import today_pacific
-
-from models import Stat
-
 from . import oauth
 
 

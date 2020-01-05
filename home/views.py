@@ -21,10 +21,10 @@ import config
 
 from .oauth_apis.googlefit import GoogleFitAPI
 
-from models import User
-from models import OAuth1Token
-from models import OAuth2Token
-from models import GoogleFitData
+from models.user import User
+from models.oauth import OAuth1Token
+from models.oauth import OAuth2Token
+from models.googlefit import GoogleFitData
 
 app = Blueprint('home', __name__)
 

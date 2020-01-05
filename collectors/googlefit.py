@@ -1,7 +1,7 @@
 import datetime
 
-from models import GoogleFitData
-from models import Stat
+from models.googlefit import GoogleFitData
+from models.stat import Stat
 from tools.util import convert_kg_to_lbs
 from tools.util import convert_metres_to_miles
 from tools.util import today_pacific
