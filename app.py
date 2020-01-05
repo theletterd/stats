@@ -22,10 +22,10 @@ def create_app():
         from oauth_apis import oauth
         oauth.init_app(app)
 
-
-
-        from home import home_app
-    app.register_blueprint(home_app)
+        import blueprints
+        app.register_blueprint(blueprints.home_app)
+        app.register_blueprint(blueprints.oauth_app)
+        app.register_blueprint(blueprints.user_app)
 
     return app
 

@@ -1,4 +1,7 @@
 import datetime
+from itertools import chain
+from itertools import islice
+
 import pytz
 pdt = pytz.timezone('US/Pacific')
 
@@ -26,3 +29,10 @@ def datetime_today_pacific():
 
 def today_pacific():
     return datetime_today_pacific().date()
+
+
+def chunks(iterable, n):
+    iterator = iter(iterable)
+    for first in iterator:
+        yield chain([first], islice(iterator, n - 1))
+
