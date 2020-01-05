@@ -1,9 +1,6 @@
 import xml.etree.ElementTree as ET
 
 from flask import current_app
-
-from models.stat import Stat
-from tools.util import today_pacific
 from . import oauth
 
 oauth.register(
@@ -20,23 +17,7 @@ GOODREADS_USERID = current_app.config['GOODREADS_USERID']
 
 class GoodreadsAPI(object):
 
-    def get_books_read_this_year():
-        current_year = today_pacific().year
-        return Stat(
-            stat_id="read_current_year",
-            description="Books I read this year",
-            value=GoodreadsAPI._get_book_titles_for_year(current_year)
-        )
-
-    def get_books_read_last_year():
-        year = today_pacific().year - 1
-        return Stat(
-            stat_id="read_prev_year",
-            description="Books I read last year",
-            value=GoodreadsAPI._get_book_titles_for_year(year)
-        )
-
-    def _get_book_titles_for_year(year):
+    def get_books_read_for_year(year):
         params = {
             'read_at': year,
             'v': '2',
@@ -69,17 +50,6 @@ class GoodreadsAPI(object):
         root = ET.fromstring(resp.content)
         title = root.findall("./reviews/review/book/title")[0].text
 
-        return Stat(
-            stat_id="currently_reading",
-            description="Reading",
-            value=title
-        )
+        return title
 
-    @classmethod
-    def get_stat_getters(klass):
-        stat_getters = [
-            klass.get_currently_reading,
-            klass.get_books_read_this_year,
-            klass.get_books_read_last_year
-        ]
-        return stat_getters
+
