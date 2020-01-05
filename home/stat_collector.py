@@ -5,10 +5,10 @@ from pymemcache.client.base import Client
 
 import config
 from models.stat import Stat
-from oauth_apis.gsheet import GoogleSheetsAPI
 from collectors.strava import StravaStats
 from collectors.googlefit import GoogleFitStats
 from collectors.goodreads import GoodreadsStats
+from collectors.gsheet import GoogleSheetsStats
 
 memcached_client = Client(("localhost", config.MEMCACHED_PORT))
 
@@ -31,11 +31,11 @@ class StatCollector(object):
             stat_list = [
                 *GoogleFitStats.get_stats(user),
                  *StravaStats.get_stats(user),
-                 *GoodreadsStats.get_stats(user)
+                 *GoodreadsStats.get_stats(user),
+                *GoogleSheetsStats.get_stats(user)
             ]
 
             stat_getter_methods = [
-                GoogleSheetsAPI.get_stats,
             ]
 
             for getter in stat_getter_methods:

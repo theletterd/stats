@@ -1,7 +1,5 @@
 from flask import current_app
 
-from models.stat import Stat
-
 from . import oauth
 oauth.register(
     name='gsheet',
@@ -24,16 +22,16 @@ oauth.register(
 class GoogleSheetsAPI(object):
 
     @classmethod
-    def get_stats(klass):
+    def get_stat_data(klass):
         resp = oauth.gsheet.get('values/Overall%20stats!A%3AD')
         values = resp.json()['values']
         headers = values[0]
 
-        stats = []
+        stat_dicts = []
         for stat in values[1:]:
             if not stat:
                 continue
             stat_dict = dict(zip(headers, stat))
-            stats.append(Stat(**stat_dict))
+            stat_dicts.append(stat_dict)
 
-        return stats
+        return stat_dicts
