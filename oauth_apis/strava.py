@@ -1,11 +1,7 @@
 import datetime
 
 from flask import current_app
-
-from models.stat import Stat
-from tools.util import today_pacific
-from tools.util import convert_metres_to_miles
-
+from models.oauth import fetch_token
 from . import oauth
 
 
@@ -38,9 +34,11 @@ oauth.register(
 
 class StravaAPI(object):
 
-    def get_stats():
+    def get_stats(user):
+        token = fetch_token('strava', user)
+
         params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
-        resp = oauth.strava.get('athlete/activities', params=params)
+        resp = oauth.strava.get('athlete/activities', params=params, token=token)
         stats = {}
 
         for activity in resp.json():
@@ -55,35 +53,5 @@ class StravaAPI(object):
 
             stats[year]['run_count'] += 1
             stats[year]['distance_run_metres'] += distance_metres
+        return stats
 
-        # construct stats
-        current_year = today_pacific().year
-        prev_year = current_year - 1
-
-        distance_current_year = convert_metres_to_miles(stats.get(current_year ,{}).get('distance_run_metres', 0))
-        distance_last_year = convert_metres_to_miles(stats.get(prev_year, {}).get('distance_run_metres', 0))
-
-        constructed_stats = [
-            Stat(
-                stat_id='distance_run_current_year_miles',
-                description='Distance this year (miles)',
-                value=f"{distance_current_year:.2f}"
-            ),
-            Stat(
-                stat_id='distance_run_prev_year_miles',
-                description='Distance last year (miles)',
-                value=f"{distance_last_year:.2f}"
-            ),
-            Stat(
-                stat_id='run_count_current_year',
-                description='Runs this year',
-                value=stats.get(current_year, {}).get('run_count', 0)
-            ),
-            Stat(
-                stat_id='run_count_prev_year',
-                description='Runs last year',
-                value=stats.get(prev_year, {}).get('run_count', 0)
-            )
-        ]
-
-        return constructed_stats
