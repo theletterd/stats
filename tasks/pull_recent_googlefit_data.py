@@ -31,7 +31,7 @@ logging.info(f'user_id: {user_id}')
 with app.app_context():
 
     # because oauth stuff needs to be initialised/imported inside an app context
-    from home.oauth_apis.googlefit import GoogleFitAPI
+    from oauth_apis.googlefit import GoogleFitAPI
 
     if not user_id:
         users = User.query.all()

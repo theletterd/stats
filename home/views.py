@@ -18,9 +18,8 @@ from flask_login import logout_user
 
 from .stat_collector import StatCollector
 import config
-
-from .oauth_apis.googlefit import GoogleFitAPI
-
+from oauth_apis import oauth
+from oauth_apis.googlefit import GoogleFitAPI
 from models.user import User
 from models.oauth import OAuth1Token
 from models.oauth import OAuth2Token
@@ -28,7 +27,6 @@ from models.googlefit import GoogleFitData
 
 app = Blueprint('home', __name__)
 
-from .oauth_apis import oauth
 
 
 ORDERED_STAT_GROUPS = [

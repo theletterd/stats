@@ -4,6 +4,8 @@ from flask import current_app
 
 from models.stat import Stat
 from tools.util import today_pacific
+from tools.util import convert_metres_to_miles
+
 from . import oauth
 
 
@@ -36,13 +38,7 @@ oauth.register(
 
 class StravaAPI(object):
 
-    def _convert_metres_to_miles_safe(metres):
-        if not metres:
-            return 0
-        return metres / 1609.0
-
-    @classmethod
-    def get_stats(klass):
+    def get_stats():
         params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
         resp = oauth.strava.get('athlete/activities', params=params)
         stats = {}
@@ -64,8 +60,8 @@ class StravaAPI(object):
         current_year = today_pacific().year
         prev_year = current_year - 1
 
-        distance_current_year = klass._convert_metres_to_miles_safe(stats.get(current_year ,{}).get('distance_run_metres', 0))
-        distance_last_year = klass._convert_metres_to_miles_safe(stats.get(prev_year, {}).get('distance_run_metres', 0))
+        distance_current_year = convert_metres_to_miles(stats.get(current_year ,{}).get('distance_run_metres', 0))
+        distance_last_year = convert_metres_to_miles(stats.get(prev_year, {}).get('distance_run_metres', 0))
 
         constructed_stats = [
             Stat(
