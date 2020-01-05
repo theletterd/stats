@@ -54,7 +54,7 @@ def login():
         # TODO use forms,
         if user:
             login_user(user)
-            return redirect(url_for(".authorized_apps"))
+            return redirect(url_for("user.authorized_apps"))
         else:
             return render_template("login.html")
 
@@ -70,7 +70,7 @@ def logout():
     flash("You're logged out, homie")
     logout_user()
     # redirect to homepage.
-    return redirect(url_for('.index'))
+    return redirect(url_for('home.index'))
 
 
 @user_app.route('/googlefit_date', methods=["POST"])
