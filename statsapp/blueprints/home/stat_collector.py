@@ -1,16 +1,16 @@
 import json
 import logging
 
+from flask import current_app
 from pymemcache.client.base import Client
 
-import config
-from models.stat import Stat
-from collectors.strava import StravaStats
-from collectors.googlefit import GoogleFitStats
-from collectors.goodreads import GoodreadsStats
-from collectors.gsheet import GoogleSheetsStats
+from statsapp.models.stat import Stat
+from statsapp.collectors.strava import StravaStats
+from statsapp.collectors.googlefit import GoogleFitStats
+from statsapp.collectors.goodreads import GoodreadsStats
+from statsapp.collectors.gsheet import GoogleSheetsStats
 
-memcached_client = Client(("localhost", config.MEMCACHED_PORT))
+memcached_client = Client(("localhost", current_app.config['MEMCACHED_PORT']))
 
 
 class StatCollector(object):

@@ -6,9 +6,9 @@ from flask import request
 from flask import redirect
 from flask_login import current_user
 
-from oauth_apis import oauth
-from models.oauth import OAuth1Token
-from models.oauth import OAuth2Token
+from statsapp.oauth_apis import oauth
+from statsapp.models.oauth import OAuth1Token
+from statsapp.models.oauth import OAuth2Token
 
 
 oauth_app = Blueprint('oauth', __name__)

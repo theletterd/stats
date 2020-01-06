@@ -1,6 +1,7 @@
 from flask import current_app
-from . import db
-from .user import User
+
+from statsapp import db
+from statsapp.models.user import User
 
 class OAuth1Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)

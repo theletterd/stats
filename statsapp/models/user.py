@@ -1,11 +1,8 @@
-from flask_bcrypt import Bcrypt
 from flask import current_app
 
-from app import login_manager
-
-bcrypt = Bcrypt()
-
-from . import db
+from statsapp import login_manager
+from statsapp import bcrypt
+from statsapp import db
 
 class User(db.Model):
 

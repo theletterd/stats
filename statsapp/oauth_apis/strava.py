@@ -1,7 +1,8 @@
 import datetime
 
 from flask import current_app
-from models.oauth import fetch_token
+
+from statsapp.models.oauth import fetch_token
 from . import oauth
 
 

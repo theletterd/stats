@@ -1,8 +1,8 @@
 import datetime
 
-from tools.util import today_pacific
-from tools import util
-from . import db
+from statsapp.tools.util import today_pacific
+from statsapp.tools import util
+from statsapp import db
 
 
 class GoogleFitData(db.Model):
