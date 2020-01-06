@@ -60,7 +60,7 @@ class StatCollector(object):
     def _load_stats_from_memcached():
         stats = {}
         try:
-            stats = json.loads(memcached_client.get(config.MEMCACHED_STATS_KEY))
+            stats = json.loads(memcached_client.get(current_app.config['MEMCACHED_STATS_KEY']))
         except Exception as e:
             print(e)
 
@@ -70,7 +70,7 @@ class StatCollector(object):
     def _dump_stats_to_memcached(stats):
         try:
             memcached_client.set(
-                config.MEMCACHED_STATS_KEY,
+                current_app.config['MEMCACHED_STATS_KEY'],
                 json.dumps(stats),
                 expire=60 * 15
             )
