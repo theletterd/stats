@@ -3,6 +3,7 @@ from flask import current_app
 from statsapp import db
 from statsapp.models.user import User
 
+
 class OAuth1Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
@@ -73,8 +74,6 @@ class OAuth2Token(db.Model):
 
         db.session.add(token_obj)
         db.session.commit()
-
-
 
     @staticmethod
     def update_token(name, token, refresh_token=None, access_token=None):

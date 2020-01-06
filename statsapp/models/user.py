@@ -4,15 +4,14 @@ from statsapp import login_manager
 from statsapp import bcrypt
 from statsapp import db
 
-class User(db.Model):
 
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
 
     def __repr__(self):
         return '<User %r>' % self.email
-
 
     @staticmethod
     def check_login(email, password):
@@ -41,18 +40,20 @@ class User(db.Model):
 
     @staticmethod
     def get_default_user():
-        return User.query.filter_by(email=current_app.config['DEFAULT_USER_EMAIL']).first()
+        return User.query.filter_by(
+            email=current_app.config['DEFAULT_USER_EMAIL']
+        ).first()
 
-    ### following methods are for flask-login compliance
+    # following methods are for flask-login compliance
 
     @login_manager.user_loader
     def get_user(user_id):
         return User.query.get(user_id)
 
-
     @property
     def is_active(self):
-        return True # we don't have any concept of inactive users
+        # we don't have any concept of inactive users
+        return True
 
     @property
     def is_authenticated(self):
@@ -65,4 +66,3 @@ class User(db.Model):
 
     def get_id(self):
         return str(self.id)
-

@@ -19,6 +19,7 @@ def _strava_compliance_fix(session):
         'refresh_token_request', _add_client_secrets_to_refresh
     )
 
+
 oauth.register(
     name='strava',
     api_base_url='https://www.strava.com/api/v3/',
@@ -38,12 +39,13 @@ class StravaAPI(object):
     def get_run_data(user):
         token = fetch_token('strava', user)
 
-        params = {"per_page": 200} # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
+        # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
+        params = {"per_page": 200}
         resp = oauth.strava.get('athlete/activities', params=params, token=token)
         stats = {}
 
         for activity in resp.json():
-            year = datetime.datetime.strptime(activity['start_date_local'],'%Y-%m-%dT%H:%M:%SZ').year
+            year = datetime.datetime.strptime(activity['start_date_local'], '%Y-%m-%dT%H:%M:%SZ').year
             distance_metres = activity['distance']
 
             if year not in stats:
@@ -55,4 +57,3 @@ class StravaAPI(object):
             stats[year]['run_count'] += 1
             stats[year]['distance_run_metres'] += distance_metres
         return stats
-

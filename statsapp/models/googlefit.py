@@ -38,7 +38,7 @@ class GoogleFitData(db.Model):
         datum = GoogleFitData.query.filter_by(
             user=user
         ).filter(
-            GoogleFitData.weight_kg != None
+            GoogleFitData.weight_kg is not None
         ).order_by(
             GoogleFitData.date.desc()
         ).limit(1).first()

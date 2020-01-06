@@ -38,7 +38,6 @@ class GoogleFitAPI(object):
         start_time = int(start_date.timestamp())
         end_time = int(end_date.timestamp())
 
-
         now = int(time.time())
         if end_time > now:
             end_time = now
@@ -58,7 +57,7 @@ class GoogleFitAPI(object):
                     "dataSourceId": "derived:com.google.distance.delta:com.google.android.gms:merge_distance_delta"
                 }
             ],
-            "bucketByTime": { "durationMillis": 86400000 },
+            "bucketByTime": {"durationMillis": 86400000},
             "startTimeMillis": start_time * 1000,
             "endTimeMillis": end_time * 1000
         }

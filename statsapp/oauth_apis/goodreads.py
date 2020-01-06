@@ -51,5 +51,3 @@ class GoodreadsAPI(object):
         title = root.findall("./reviews/review/book/title")[0].text
 
         return title
-
-

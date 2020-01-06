@@ -8,7 +8,6 @@ login_manager = LoginManager()
 bcrypt = Bcrypt()
 
 
-
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object('statsapp.config')
