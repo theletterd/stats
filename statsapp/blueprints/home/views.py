@@ -1,20 +1,20 @@
 from flask import Blueprint
+from flask import current_app
 from flask import jsonify
 from flask import render_template
 
 from .stat_collector import StatCollector
-import config
-from models.user import User
+from statsapp.models.user import User
 
 home_app = Blueprint('home', __name__)
 
 
 ORDERED_STAT_GROUPS = [
-    config.MISC_STAT_GROUPS,
-    config.STEP_STAT_GROUPS,
-    config.RUNNING_STAT_GROUPS,
-    config.WEIGHT_STAT_GROUPS,
-    config.BOOK_STAT_GROUPS,
+    current_app.config['MISC_STAT_GROUPS'],
+    current_app.config['STEP_STAT_GROUPS'],
+    current_app.config['RUNNING_STAT_GROUPS'],
+    current_app.config['WEIGHT_STAT_GROUPS'],
+    current_app.config['BOOK_STAT_GROUPS'],
 ]
 
 

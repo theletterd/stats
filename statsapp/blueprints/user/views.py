@@ -7,16 +7,15 @@ from flask import request
 from flask import url_for
 from flask import flash
 from flask import render_template
-
 from flask_login import current_user
 from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
 
-from oauth_apis.googlefit import GoogleFitAPI
-from models.googlefit import GoogleFitData
-from models.user import User
-from tools.util import chunks
+from statsapp.models.googlefit import GoogleFitData
+from statsapp.models.user import User
+from statsapp.oauth_apis.googlefit import GoogleFitAPI
+from statsapp.tools.util import chunks
 
 user_app = Blueprint('user', __name__)
 

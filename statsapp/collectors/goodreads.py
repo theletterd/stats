@@ -1,6 +1,6 @@
-from models.stat import Stat
-from oauth_apis.goodreads import GoodreadsAPI
-from tools.util import today_pacific
+from statsapp.models.stat import Stat
+from statsapp.oauth_apis.goodreads import GoodreadsAPI
+from statsapp.tools.util import today_pacific
 
 
 class GoodreadsStats(object):

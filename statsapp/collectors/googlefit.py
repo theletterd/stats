@@ -1,10 +1,10 @@
 import datetime
 
-from models.googlefit import GoogleFitData
-from models.stat import Stat
-from tools.util import convert_kg_to_lbs
-from tools.util import convert_metres_to_miles
-from tools.util import today_pacific
+from statsapp.models.googlefit import GoogleFitData
+from statsapp.models.stat import Stat
+from statsapp.tools.util import convert_kg_to_lbs
+from statsapp.tools.util import convert_metres_to_miles
+from statsapp.tools.util import today_pacific
 
 class GoogleFitStats(object):
 

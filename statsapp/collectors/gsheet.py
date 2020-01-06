@@ -1,5 +1,5 @@
-from models.stat import Stat
-from oauth_apis.gsheet import GoogleSheetsAPI
+from statsapp.models.stat import Stat
+from statsapp.oauth_apis.gsheet import GoogleSheetsAPI
 
 
 class GoogleSheetsStats(object):

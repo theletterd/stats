@@ -1,7 +1,7 @@
-from models.stat import Stat
-from oauth_apis.strava import StravaAPI
-from tools.util import today_pacific
-from tools.util import convert_metres_to_miles
+from statsapp.models.stat import Stat
+from statsapp.oauth_apis.strava import StravaAPI
+from statsapp.tools.util import today_pacific
+from statsapp.tools.util import convert_metres_to_miles
 
 
 class StravaStats(object):
