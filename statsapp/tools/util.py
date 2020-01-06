@@ -13,7 +13,6 @@ def convert_metres_to_miles(metres):
         return 0
     return metres / 1609.0
 
-
 def get_dates_between(start_date, end_date):
     assert start_date <= end_date
 
@@ -29,7 +28,6 @@ def datetime_today_pacific():
 
 def today_pacific():
     return datetime_today_pacific().date()
-
 
 def chunks(iterable, n):
     iterator = iter(iterable)
