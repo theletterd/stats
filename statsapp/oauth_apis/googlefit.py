@@ -14,7 +14,8 @@ oauth.register(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     authorize_params={
         'scope': 'https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.body.read https://www.googleapis.com/auth/fitness.location.read',
-        'access_type': 'offline'
+        'access_type': 'offline',
+        'prompt': 'consent'
     },
     # used for getting the token
     access_token_url='https://accounts.google.com/o/oauth2/token',

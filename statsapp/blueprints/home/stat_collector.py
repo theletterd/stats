@@ -49,7 +49,8 @@ class StatCollector(object):
                     logging.exception(e)
 
             for stat in stat_list:
-                stats[stat.stat_id] = stat._asdict()
+                if stat:
+                    stats[stat.stat_id] = stat._asdict()
 
         # attempt to push stats back to memcached
         StatCollector._dump_stats_to_memcached(stats)
