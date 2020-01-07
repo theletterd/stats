@@ -6,5 +6,6 @@ flask-bcrypt
 flask-sqlalchemy
 flask-login
 pytest
+pytest-cov
 pymemcache
 pytz
