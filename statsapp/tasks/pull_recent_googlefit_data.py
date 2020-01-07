@@ -2,10 +2,10 @@ import argparse
 import datetime
 import logging
 
-import app as _app
-from models.user import User
-from models.googlefit import GoogleFitData
-from tools import util
+from statsapp import create_app
+from statsapp.models.user import User
+from statsapp.models.googlefit import GoogleFitData
+from statsapp.tools import util
 
 date_parser = lambda s: datetime.date.fromisoformat(s)
 
@@ -22,7 +22,7 @@ dates = util.get_dates_between(start_date, end_date)
 user_id = args.user_id
 
 
-app = _app.create_app()
+app = create_app()
 logging.info(f'start_date: {start_date}')
 logging.info(f'end_date: {end_date}')
 logging.info(f'user_id: {user_id}')
@@ -31,7 +31,7 @@ logging.info(f'user_id: {user_id}')
 with app.app_context():
 
     # because oauth stuff needs to be initialised/imported inside an app context
-    from oauth_apis.googlefit import GoogleFitAPI
+    from statsapp.oauth_apis.googlefit import GoogleFitAPI
 
     if not user_id:
         users = User.query.all()
