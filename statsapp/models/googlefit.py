@@ -34,11 +34,12 @@ class GoogleFitData(db.Model):
                 expected_dates.remove(data_obj.date)
         return expected_dates
 
+    # TODO Test
     def get_most_recent_weight(user):
         datum = GoogleFitData.query.filter_by(
             user=user
         ).filter(
-            GoogleFitData.weight_kg is not None
+            GoogleFitData.weight_kg.isnot(None)
         ).order_by(
             GoogleFitData.date.desc()
         ).limit(1).first()
@@ -83,7 +84,6 @@ class GoogleFitData(db.Model):
         fit_obj.step_count = step_count
         fit_obj.weight_kg = weight_kg
         fit_obj.distance_metres = distance_metres
-
         db.session.add(fit_obj)
         db.session.commit()
         return fit_obj

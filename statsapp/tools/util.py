@@ -28,7 +28,7 @@ def get_dates_between(start_date, end_date):
 
 
 def datetime_today_pacific():
-    return datetime.datetime.utcnow().astimezone(pdt)
+    return pdt.fromutc(datetime.datetime.utcnow())
 
 
 def today_pacific():
