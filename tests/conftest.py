@@ -5,11 +5,10 @@ from unittest import mock
 import pytest
 from pytest_mock import mocker # noqa
 
-
 import statsapp
 from statsapp import db
 from statsapp.models.user import User
-from statsapp import create_app
+
 
 @pytest.fixture(autouse=True)
 def app(mocker): # noqa
@@ -32,13 +31,10 @@ def app(mocker): # noqa
     with app.app_context():
         # let's mock out any more calls to create_app and have it just return the app we
         # have now. otherwise it will end up creating a non-test instance of the app :S
-        mocker.patch('statsapp.create_app', return_value=app)
-
+        # this doesn't prevent doing "from statsapp import create_app" from instantiating a non-test app though.        mocker.patch('statsapp.create_app', return_value=app)
         db.init_app(app)
         db.create_all()
         User.create_user(app.config['DEFAULT_USER_EMAIL'], 'password')
-
-        # this doesn't prevent doing "from statsapp import create_app" from instantiating a non-test app though.
 
         print(id(app))
         yield app

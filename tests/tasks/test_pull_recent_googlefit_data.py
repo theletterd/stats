@@ -4,7 +4,7 @@ from statsapp.models.googlefit import GoogleFitData
 from statsapp.models.user import User
 from statsapp.tasks.pull_recent_googlefit_data import PullRecentGoogleFitData
 
-def test_things(mock_googlefit_api):
+def test_get_data_and_upsert(mock_googlefit_api):
     steps = 1
     distance = 2
     weight = 3

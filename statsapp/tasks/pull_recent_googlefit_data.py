@@ -2,8 +2,7 @@ import argparse
 import datetime
 import logging
 
-from statsapp import create_app
-
+import statsapp
 from statsapp.models.user import User
 from statsapp.models.googlefit import GoogleFitData
 from statsapp.tools import util
@@ -13,7 +12,7 @@ date_parser = lambda s: datetime.date.fromisoformat(s)
 class PullRecentGoogleFitData(object):
 
     def __init__(self):
-        self.app = create_app()
+        self.app = statsapp.create_app()
         self.setup_parser()
         self.process_args()
 

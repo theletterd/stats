@@ -1,4 +1,4 @@
-from statsapp import create_app
-app = create_app()
+import statsapp
 
+app = statsapp.create_app()
 app.app_context().__enter__()
