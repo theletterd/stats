@@ -11,7 +11,6 @@ from statsapp import create_app
 @pytest.fixture(scope='session', autouse=True)
 def app():
     db_fd, db_path = tempfile.mkstemp()
-    print(db_path)
     app = create_app({
         'TESTING': True,
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///' + db_path,
