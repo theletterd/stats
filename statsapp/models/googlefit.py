@@ -34,11 +34,12 @@ class GoogleFitData(db.Model):
                 expected_dates.remove(data_obj.date)
         return expected_dates
 
+    # TODO Test
     def get_most_recent_weight(user):
         datum = GoogleFitData.query.filter_by(
             user=user
         ).filter(
-            GoogleFitData.weight_kg is not None
+            GoogleFitData.weight_kg.isnot(None)
         ).order_by(
             GoogleFitData.date.desc()
         ).limit(1).first()

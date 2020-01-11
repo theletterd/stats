@@ -2,6 +2,7 @@ MEMCACHED_PORT = 20583
 MEMCACHED_STATS_KEY = 'stats_app_stats'
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///./sqlite_database'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 OAUTH1_SERVICES = {'goodreads'}
 
@@ -59,6 +60,7 @@ MISC_STAT_GROUPS = {
             'shoe_size_us_mens',
             'shoe_size_us_womens',
             'dress_size_us',
+            'max_pullup_count'
         ],
     ]
 }
