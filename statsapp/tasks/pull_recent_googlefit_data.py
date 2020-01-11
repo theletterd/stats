@@ -3,6 +3,7 @@ import datetime
 import logging
 
 from statsapp import create_app
+
 from statsapp.models.user import User
 from statsapp.models.googlefit import GoogleFitData
 from statsapp.tools import util

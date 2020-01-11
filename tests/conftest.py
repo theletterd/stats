@@ -1,17 +1,20 @@
 import os
 import tempfile
+from unittest import mock
 
 import pytest
+from pytest_mock import mocker # noqa
 
+
+import statsapp
 from statsapp import db
 from statsapp.models.user import User
 from statsapp import create_app
 
-
-@pytest.fixture(scope='session', autouse=True)
-def app():
+@pytest.fixture(autouse=True)
+def app(mocker): # noqa
     db_fd, db_path = tempfile.mkstemp()
-    app = create_app({
+    app = statsapp.create_app({
         'TESTING': True,
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///' + db_path,
         'STRAVA_CLIENT_ID': '',
@@ -27,12 +30,18 @@ def app():
     })
 
     with app.app_context():
+        # let's mock out any more calls to create_app and have it just return the app we
+        # have now. otherwise it will end up creating a non-test instance of the app :S
+        mocker.patch('statsapp.create_app', return_value=app)
+
         db.init_app(app)
         db.create_all()
         User.create_user(app.config['DEFAULT_USER_EMAIL'], 'password')
 
-        yield app
+        # this doesn't prevent doing "from statsapp import create_app" from instantiating a non-test app though.
 
+        print(id(app))
+        yield app
 
     os.close(db_fd)
     os.unlink(db_path)
@@ -41,3 +50,9 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture
+def mock_googlefit_api(mocker): # noqa
+    m = mocker.patch('statsapp.oauth_apis.googlefit.GoogleFitAPI.get_stats_for_date')
+    yield m

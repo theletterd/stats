@@ -1,4 +1,5 @@
 from flask_bcrypt import Bcrypt
+from flask import current_app
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -9,6 +10,10 @@ bcrypt = Bcrypt()
 
 
 def create_app(test_config=None):
+    # if we're already in an app-context (e.g, in testing), don't create another one
+    if current_app:
+        return current_app
+
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_object('statsapp.config')
