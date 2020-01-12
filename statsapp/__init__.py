@@ -1,9 +1,11 @@
 from flask_bcrypt import Bcrypt
 from flask import current_app
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
+csrf = CSRFProtect()
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
@@ -25,6 +27,8 @@ def create_app(test_config=None):
 
 
     with app.app_context():
+        csrf.init_app(app)
+
         db.init_app(app)
         db.create_all()
 

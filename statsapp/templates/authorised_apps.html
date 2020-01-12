@@ -18,6 +18,7 @@
       <div>
 	{% for date_chunk in date_chunks %}
 	    <form class="date-submit-form" action="/googlefit_date" method="post">
+	      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 	      {% for date in date_chunk %}
 	      <input type="hidden" name="date" value="{{date}}" />
 	      {% endfor %}
