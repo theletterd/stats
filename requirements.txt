@@ -5,6 +5,7 @@ flask
 flask-bcrypt
 flask-sqlalchemy
 flask-login
+flask-wtf
 pytest
 pytest-cov
 pytest-mock
