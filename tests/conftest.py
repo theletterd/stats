@@ -23,6 +23,7 @@ def app(mocker): # noqa
         'GOODREADS_USERID': '',
         'GSHEET_CLIENT_ID': '',
         'GSHEET_CLIENT_SECRET': '',
+        'GSHEET_DOC_ID': '',
         'GOOGLEFIT_CLIENT_ID': '',
         'GOOGLEFIT_CLIENT_SECRET': '',
         'DEFAULT_USER_EMAIL': 'test.email@example.com',
