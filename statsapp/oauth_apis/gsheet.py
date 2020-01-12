@@ -1,9 +1,11 @@
 from flask import current_app
 
+GSHEET_DOC_ID = current_app.config['GSHEET_DOC_ID']
+
 from . import oauth
 oauth.register(
     name='gsheet',
-    api_base_url='https://sheets.googleapis.com/v4/spreadsheets/12EaqvSuXoO2wiO80YKTrdlgsie0zwKc4t_esnNSPkdw/',
+    api_base_url=f'https://sheets.googleapis.com/v4/spreadsheets/{GSHEET_DOC_ID}/',
     # used to get a user's permissions
     authorize_url='https://accounts.google.com/o/oauth2/v2/auth',
     authorize_params={
