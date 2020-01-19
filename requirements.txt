@@ -3,11 +3,12 @@ requests
 ipython
 flask
 flask-bcrypt
+flask-caching
 flask-sqlalchemy
 flask-login
 flask-wtf
+python-memcached
 pytest
 pytest-cov
 pytest-mock
-pymemcache
 pytz

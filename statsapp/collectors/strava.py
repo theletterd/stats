@@ -1,3 +1,4 @@
+from statsapp import cache
 from statsapp.models.stat import Stat
 from statsapp.apis.strava import StravaAPI
 from statsapp.tools.util import today_pacific
@@ -6,6 +7,7 @@ from statsapp.tools.util import convert_metres_to_miles
 
 class StravaStats(object):
 
+    @cache.cached(key_prefix="running_stats", timeout=60 * 15)
     def get_stats(user):
         run_data = StravaAPI.get_run_data(user)
 
