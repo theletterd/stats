@@ -35,7 +35,7 @@ class PullRecentGoogleFitData(object):
             db.session.add(user)
 
             # because oauth stuff needs to be initialised/imported inside an app context
-            from statsapp.oauth_apis.googlefit import GoogleFitAPI
+            from statsapp.apis.googlefit import GoogleFitAPI
             print(f"Getting data for {user} on {date}")
             step_count, distance_metres, weight_kg = GoogleFitAPI.get_stats_for_date(date, user)
             print(f"{date}: steps - {step_count}, distance - {distance_metres}, weight - {weight_kg}")
