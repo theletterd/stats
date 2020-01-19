@@ -1,8 +1,10 @@
+from statsapp import cache
 from statsapp.apis.goals import GoalsAPI
 from statsapp.models.stat import Stat
 
 class GoalStats(object):
 
+    @cache.cached(key_prefix="goal_completion", timeout=60 * 60 * 24)
     def get_stats(user):
         # we don't use user here, it's just for consistency's sake
         goal_data = GoalsAPI.get_goals_data()

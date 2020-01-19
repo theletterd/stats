@@ -1,3 +1,4 @@
+from statsapp import cache
 from statsapp.models.stat import Stat
 from statsapp.apis.goodreads import GoodreadsAPI
 from statsapp.tools.util import today_pacific
@@ -18,6 +19,7 @@ class GoodreadsStats(object):
             GoodreadsStats._get_currently_reading(),
         ]
 
+    @cache.cached(key_prefix='read_prev_year', timeout=60*60*24*7)
     def _get_books_read_last_year():
         year = today_pacific().year - 1
 
@@ -28,6 +30,7 @@ class GoodreadsStats(object):
             value=titles
         )
 
+    @cache.cached(key_prefix='read_current_year', timeout=60*60)
     def _get_books_read_this_year():
         current_year = today_pacific().year
         titles = GoodreadsAPI.get_books_read_for_year(current_year)
@@ -37,6 +40,7 @@ class GoodreadsStats(object):
             value=titles
         )
 
+    @cache.cached(key_prefix='currently_reading', timeout=60*60)
     def _get_currently_reading():
         title = GoodreadsAPI.get_currently_reading()
         return Stat(

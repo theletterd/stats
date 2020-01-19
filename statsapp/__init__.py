@@ -1,6 +1,7 @@
 from flask_bcrypt import Bcrypt
 from flask import current_app
 from flask import Flask
+from flask_caching import Cache
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -9,6 +10,7 @@ csrf = CSRFProtect()
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+cache = Cache()
 
 
 def create_app(test_config=None):
@@ -33,6 +35,7 @@ def create_app(test_config=None):
         db.create_all()
 
         bcrypt.init_app(app)
+        cache.init_app(app)
         login_manager.init_app(app)
 
         # does it make sense to add the oauth library here?
