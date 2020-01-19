@@ -1,5 +1,5 @@
 from statsapp.models.stat import Stat
-from statsapp.oauth_apis.strava import StravaAPI
+from statsapp.apis.strava import StravaAPI
 from statsapp.tools.util import today_pacific
 from statsapp.tools.util import convert_metres_to_miles
 

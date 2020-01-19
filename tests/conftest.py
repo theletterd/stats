@@ -51,5 +51,5 @@ def client(app):
 
 @pytest.fixture
 def mock_googlefit_api(mocker): # noqa
-    m = mocker.patch('statsapp.oauth_apis.googlefit.GoogleFitAPI.get_stats_for_date')
+    m = mocker.patch('statsapp.apis.googlefit.GoogleFitAPI.get_stats_for_date')
     yield m

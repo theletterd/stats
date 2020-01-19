@@ -14,7 +14,7 @@ from flask_login import logout_user
 
 from statsapp.models.googlefit import GoogleFitData
 from statsapp.models.user import User
-from statsapp.oauth_apis.googlefit import GoogleFitAPI
+from statsapp.apis.googlefit import GoogleFitAPI
 from statsapp.tools.util import chunks
 
 user_app = Blueprint('user', __name__)

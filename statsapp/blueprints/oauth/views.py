@@ -6,7 +6,7 @@ from flask import request
 from flask import redirect
 from flask_login import current_user
 
-from statsapp.oauth_apis import oauth
+from statsapp.apis import oauth
 from statsapp.models.oauth import OAuth1Token
 from statsapp.models.oauth import OAuth2Token
 

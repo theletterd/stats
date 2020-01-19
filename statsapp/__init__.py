@@ -36,7 +36,7 @@ def create_app(test_config=None):
         login_manager.init_app(app)
 
         # does it make sense to add the oauth library here?
-        from statsapp.oauth_apis import oauth
+        from statsapp.apis import oauth
         oauth.init_app(app)
 
         from statsapp import blueprints
