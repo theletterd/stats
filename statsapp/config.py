@@ -62,6 +62,7 @@ MISC_STAT_GROUPS = {
             'dress_size_us',
             'max_pullup_count'
         ],
+        ['goal_completion'],
     ]
 }
 

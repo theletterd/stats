@@ -6,6 +6,7 @@ from pymemcache.client.base import Client
 
 from statsapp.models.stat import Stat
 from statsapp.collectors.strava import StravaStats
+from statsapp.collectors.goals import GoalStats
 from statsapp.collectors.googlefit import GoogleFitStats
 from statsapp.collectors.goodreads import GoodreadsStats
 from statsapp.collectors.gsheet import GoogleSheetsStats
@@ -35,6 +36,7 @@ class StatCollector(object):
                 StravaStats.get_stats,
                 GoodreadsStats.get_stats,
                 GoogleSheetsStats.get_stats,
+                GoalStats.get_stats,
             ]
 
             for getter in stat_getter_methods:
