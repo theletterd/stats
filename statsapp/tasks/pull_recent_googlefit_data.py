@@ -3,6 +3,7 @@ import datetime
 import logging
 
 import statsapp
+from statsapp import db
 from statsapp.models.user import User
 from statsapp.models.googlefit import GoogleFitData
 from statsapp.tools import util
@@ -29,14 +30,15 @@ class PullRecentGoogleFitData(object):
         self.start_date = self.args.start_date or (self.end_date - datetime.timedelta(days=1))
         self.user_id = self.args.user_id
 
-
     def get_data_and_upsert(self, date, user):
         with self.app.app_context():
+            db.session.add(user)
+
             # because oauth stuff needs to be initialised/imported inside an app context
             from statsapp.oauth_apis.googlefit import GoogleFitAPI
-
-            logging.info(f"Getting data for {user} on {date}")
+            print(f"Getting data for {user} on {date}")
             step_count, distance_metres, weight_kg = GoogleFitAPI.get_stats_for_date(date, user)
+            print(f"{date}: steps - {step_count}, distance - {distance_metres}, weight - {weight_kg}")
             GoogleFitData.upsert(
                 user,
                 date,
@@ -47,7 +49,6 @@ class PullRecentGoogleFitData(object):
 
     def run(self):
         dates = util.get_dates_between(self.start_date, self.end_date)
-
         with self.app.app_context():
             if not self.user_id:
                 users = User.query.all()
@@ -59,7 +60,7 @@ class PullRecentGoogleFitData(object):
                 try:
                     self.get_data_and_upsert(date, user)
                 except Exception as e:
-                    logging.info(f"failed to get data for {user} on {date}")
+                    print(f"failed to get data for {user} on {date}")
                     logging.exception(e)
 
 
