@@ -4,7 +4,7 @@
       <script type="text/babel">
 
 	  class BasicStat extends React.Component {
-	      
+
 	      render() {
 	          var values = [this.props.value];
 	          var valueElements;
@@ -41,7 +41,7 @@
 		      <div className="stats">
 			{basicStatElements}
 		      </div>
-		  );  
+		  );
 	      }
           }
 
@@ -52,8 +52,8 @@
                   );
 	          return (
 	            <div className="statgroup">
-		      {this.props.stat_group.description != undefined && 
-		          <div className="stat stat-header">{this.props.stat_group.description}</div> 
+		      {this.props.stat_group.description != undefined &&
+		          <div className="stat stat-header">{this.props.stat_group.description}</div>
                       }
 		      {basicStatSubGroups}
 		    </div>
@@ -109,7 +109,7 @@
 	  $('body').on('click', function (e) {
 	      //did not click a popover toggle or popover
 	      if ($(e.target).data('toggle') !== 'popover'
-                  && $(e.target).parents('.popover.in').length === 0) { 
+                  && $(e.target).parents('.popover.in').length === 0) {
                   $('[data-toggle="popover"]').popover('hide');
 	      }
 	  });
