@@ -49,6 +49,16 @@ class GoogleFitData(db.Model):
 
         return None
 
+    def get_weight_datapoints_for_user(user):
+        data = GoogleFitData.query.filter_by(
+            user=user
+        ).filter(
+            GoogleFitData.weight_kg.isnot(None)
+        ).all()
+
+        date_weights = ((datum.date, datum.weight_kg) for datum in data)
+        return date_weights
+
     def get_data_for_year(user, year):
         start_date = datetime.date(year, 1, 1)
         end_date = datetime.date(year, 12, 31)

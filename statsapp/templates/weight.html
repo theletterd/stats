@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div style="width: 1000px; background-color: #1b1b17">
+	 <canvas id="weight-chart"></canvas>
+    </div>
+    <script>
+        var data = [
+	    {% for datapoint in data %}
+	        {
+	            x: new Date("{{ datapoint.x }}"),
+	            y: {{ datapoint.y }}
+	        },
+            {% endfor %}
+	];
+        var ctx = document.getElementById('weight-chart').getContext('2d');
+	ctx.canvas.width = 800;
+	ctx.canvas.height = 300;
+        var myChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+	            {
+	                data: data,
+	                label: "Weight (lbs)",
+	                backgroundColor: "#ff9900",
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+	                distribution: 'linear',
+	                time: {unit: 'month'},
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock %}

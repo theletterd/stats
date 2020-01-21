@@ -4,7 +4,9 @@ from flask import jsonify
 from flask import render_template
 
 from .stat_collector import StatCollector
+from statsapp.models.googlefit import GoogleFitData
 from statsapp.models.user import User
+from statsapp.tools.util import convert_kg_to_lbs
 
 home_app = Blueprint('home', __name__)
 
@@ -48,6 +50,18 @@ def data():
     )
 
     return jsonify(data)
+
+
+@home_app.route("/weight")
+def weight():
+    user = User.get_default_user()
+    weight_data = GoogleFitData.get_weight_datapoints_for_user(user)
+
+    formatted_weight_data = [
+        dict(x=date.isoformat(), y=convert_kg_to_lbs(weight_kg)) for date, weight_kg in weight_data
+    ]
+    context = {'data': formatted_weight_data}
+    return render_template('weight.html', **context)
 
 
 def _get_populated_stat_groups(raw_stats, stat_group):
