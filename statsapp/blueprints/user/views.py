@@ -27,15 +27,21 @@ def authorized_apps():
     gsheet_url = url_for("oauth.oauth_login", name='gsheet')
     goodreads_url = url_for("oauth.oauth_login", name='goodreads')
     googlefit_url = url_for("oauth.oauth_login", name='googlefit')
+    withings_url = url_for("oauth.oauth_login", name='withings')
     missing_dates = GoogleFitData.days_missing(current_user)
+
+    auth_urls = (
+        ('Strava', strava_url),
+        ('GSheet', gsheet_url),
+        ('Goodreads', goodreads_url),
+        ('Googlefit', googlefit_url),
+        ('Withings', withings_url),
+    )
 
     date_chunk_iterator = chunks(missing_dates, 20)
     date_chunks = [list(x) for x in date_chunk_iterator]
     context = dict(
-        strava_url=strava_url,
-        gsheet_url=gsheet_url,
-        goodreads_url=goodreads_url,
-        googlefit_url=googlefit_url,
+        auth_urls=auth_urls,
         missing_dates=missing_dates,
         date_chunks=date_chunks
     )
