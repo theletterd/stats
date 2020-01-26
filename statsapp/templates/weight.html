@@ -26,24 +26,40 @@
 	        },
             {% endfor %}
 	];
+        var runData = [
+	    {% for datapoint in run_data %}
+	        {
+	            x: new Date("{{ datapoint.x }}"),
+	            y: {{ datapoint.y }}
+	        },
+            {% endfor %}
+	];
         var ctx = document.getElementById('weight-chart').getContext('2d');
 	ctx.canvas.width = 1000;
 	ctx.canvas.height = 400;
         var myChart = new Chart(ctx, {
-            type: 'scatter',
             data: {
                 datasets: [
 	            {
+	                type: 'scatter',
 	                data: weightData,
 	                label: "Weight",
 	                backgroundColor: "#ff9900",
 	                yAxisID: 'weight-axis'
                     },
 	            {
+	                type: 'scatter',
 	                data: stepData,
 	                label: "Steps",
 	                backgroundColor: "#00ff00",
 	                yAxisID: 'step-axis'
+                    },
+	            {
+	                type: 'bar',
+	                data: runData,
+	                label: "Runs",
+	                backgroundColor: "#550000",
+	                yAxisID: 'run-axis'
                     },
                 ]
             },
@@ -64,6 +80,12 @@
 	                    scaleLabel: {labelString: "Steps", display: true},
 	                    position: 'right',
 	                    id: 'step-axis'
+                        },
+    	                {
+	                    scaleLabel: {labelString: "Run distance", display: false},
+	                    id: 'run-axis',
+	                    display: false,
+	                    ticks: {max: 1.0, min: 0}
                         }
                     ]
                 },
