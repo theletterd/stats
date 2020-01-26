@@ -4,6 +4,8 @@ from flask import jsonify
 from flask import render_template
 
 from .stat_collector import StatCollector
+from statsapp.apis.strava import StravaAPI
+from statsapp.models.googlefit import GoogleFitData
 from statsapp.models.withings import WithingsData
 from statsapp.models.user import User
 from statsapp.tools.util import convert_kg_to_lbs
@@ -56,11 +58,30 @@ def data():
 def weight():
     user = User.get_default_user()
     weight_data = WithingsData.get_weight_datapoints_for_user(user)
+    # that is an assumption. Let's do a sort
+    earliest_date = sorted(weight_data, key=lambda x: x[0])[0][0]
+    step_data = GoogleFitData.get_monthly_step_data(user, start_date=earliest_date)
+
+    # TODO persist this in a DB
+    runs = StravaAPI.get_run_data(user)
+
+    formatted_step_data = [
+        dict(x=date.replace(day=15).isoformat(), y=step_count) for date, step_count in step_data.items()
+    ]
 
     formatted_weight_data = [
         dict(x=date.isoformat(), y=convert_kg_to_lbs(weight_kg)) for date, weight_kg in weight_data
     ]
-    context = {'data': formatted_weight_data}
+
+    formatted_run_data = [
+        dict(x=date.date().isoformat(), y=1) for date, distance_metres in runs if date.date() >= earliest_date
+    ]
+
+    context = {
+        'weight_data': formatted_weight_data,
+        'step_data': formatted_step_data,
+        'run_data': formatted_run_data,
+    }
     return render_template('weight.html', **context)
 
 

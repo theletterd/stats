@@ -42,18 +42,11 @@ class StravaAPI(object):
         # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
         params = {"per_page": 200}
         resp = oauth.strava.get('athlete/activities', params=params, token=token)
-        stats = {}
+        runs = []
 
         for activity in resp.json():
-            year = datetime.datetime.strptime(activity['start_date_local'], '%Y-%m-%dT%H:%M:%SZ').year
+            date = datetime.datetime.strptime(activity['start_date_local'], '%Y-%m-%dT%H:%M:%SZ')
             distance_metres = activity['distance']
+            runs.append((date, distance_metres))
+        return runs
 
-            if year not in stats:
-                stats[year] = {
-                    'run_count': 0,
-                    'distance_run_metres': 0
-                }
-
-            stats[year]['run_count'] += 1
-            stats[year]['distance_run_metres'] += distance_metres
-        return stats

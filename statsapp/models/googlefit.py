@@ -1,3 +1,4 @@
+from collections import defaultdict
 import datetime
 
 from statsapp.tools.util import today_pacific
@@ -54,6 +55,28 @@ class GoogleFitData(db.Model):
         ).first()
 
         return data
+
+    def get_monthly_step_data(user, start_date=None):
+
+        query = GoogleFitData.query.filter_by(
+            user=user
+        )
+
+        if start_date:
+            query = query.filter(
+                GoogleFitData.date >= start_date
+            )
+
+        data = query.all()
+
+        step_counts_by_month = defaultdict(int)
+
+        for datum in data:
+            d = datum.date
+            month = datetime.date(d.year, d.month, 1)
+            step_counts_by_month[month] += datum.step_count
+
+        return step_counts_by_month
 
     def upsert(user, date, step_count, distance_metres):
         fit_obj = GoogleFitData.query.filter_by(
