@@ -5,12 +5,12 @@ import logging
 import statsapp
 from statsapp import db
 from statsapp.models.user import User
-from statsapp.models.googlefit import GoogleFitData
+from statsapp.models.withings import WithingsData
 from statsapp.tools import util
 
 date_parser = lambda s: datetime.date.fromisoformat(s)
 
-class PullRecentGoogleFitData(object):
+class PullWithingsData(object):
 
     def __init__(self):
         self.app = statsapp.create_app()
@@ -35,16 +35,16 @@ class PullRecentGoogleFitData(object):
             db.session.add(user)
 
             # because oauth stuff needs to be initialised/imported inside an app context
-            from statsapp.apis.googlefit import GoogleFitAPI
-            print(f"Getting data for {user} on {date}")
-            step_count, distance_metres = GoogleFitAPI.get_stats_for_date(date, user)
-            print(f"{date}: steps - {step_count}, distance - {distance_metres}")
-            GoogleFitData.upsert(
-                user,
-                date,
-                step_count,
-                distance_metres
-            )
+            from statsapp.apis.withings import WithingsAPI
+            print(f"Getting withings data for {user} on {date}")
+            weight_kg = WithingsAPI.get_weight_data(date, user)
+            print(f"{date}: weight - {weight_kg}")
+            if weight_kg:
+                WithingsData.upsert(
+                    user,
+                    date,
+                    weight_kg
+                )
 
     def run(self):
         dates = util.get_dates_between(self.start_date, self.end_date)
@@ -64,4 +64,4 @@ class PullRecentGoogleFitData(object):
 
 
 if __name__ == '__main__':
-    PullRecentGoogleFitData().run()
+    PullWithingsData().run()

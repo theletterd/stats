@@ -2,7 +2,6 @@ import datetime
 
 from statsapp.models.googlefit import GoogleFitData
 from statsapp.models.stat import Stat
-from statsapp.tools.util import convert_kg_to_lbs
 from statsapp.tools.util import convert_metres_to_miles
 from statsapp.tools.util import today_pacific
 
@@ -11,7 +10,6 @@ class GoogleFitStats(object):
     # so this is presumably where we should be collecting our stats from.
     def get_stats(user):
         return [
-            GoogleFitStats._get_most_recent_weight(user),
             *GoogleFitStats._get_stats_for_current_year(user),
             *GoogleFitStats._get_stats_for_prev_year(user),
             *GoogleFitStats._get_recent_stats(user)
@@ -29,24 +27,11 @@ class GoogleFitStats(object):
         data = GoogleFitData.get_data_for_year(user, year)
 
         step_count = 0
-        weights = []
         distance_metres = 0
 
         for datapoint in data:
             step_count += datapoint.step_count
             distance_metres += datapoint.distance_metres
-
-            if datapoint.weight_kg:
-                weights.append(datapoint.weight_kg)
-
-        if weights:
-            # maybe not the most accurate measurement of average weight.
-            avg_weight_kg = sum(weights) / len(weights)
-        else:
-            avg_weight_kg = None
-
-        min_weight_kg = min(weights)
-        max_weight_kg = max(weights)
 
         return [
             Stat(
@@ -60,35 +45,7 @@ class GoogleFitStats(object):
                 value='{distance:.0f}'.format(distance=convert_metres_to_miles(distance_metres)),
                 notes="Includes running and walking"
             ),
-            Stat(
-                stat_id=f'weight_lbs_min_{stat_str}',
-                description=f'Min Weight {display_str}',
-                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(min_weight_kg))
-            ),
-            Stat(
-                stat_id=f'weight_lbs_max_{stat_str}',
-                description=f'Max Weight {display_str}',
-                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(max_weight_kg))
-            ),
-            Stat(
-                stat_id=f'weight_lbs_avg_{stat_str}',
-                description=f'Avg Weight {display_str}',
-                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(avg_weight_kg))
-            )
         ]
-
-    def _get_most_recent_weight(user):
-        weight_kg = GoogleFitData.get_most_recent_weight(user)
-
-        if weight_kg:
-            weight_lbs = convert_kg_to_lbs(weight_kg)
-            return Stat(
-                stat_id='weight_lbs_recent',
-                description="Recent Weight (lbs)",
-                value=f"{weight_lbs:.1f}"
-            )
-
-        return None
 
     def _get_recent_stats(user):
         stats = []
@@ -133,15 +90,3 @@ class GoogleFitStats(object):
 
         return stats
 
-    def _get_other_stats(user):
-
-        # steps last week
-        # steps this week so far
-
-        # average weekly steps
-
-        # distance last week
-        # distance this week
-        # average weekly distance
-
-        pass

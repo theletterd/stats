@@ -12,7 +12,6 @@ class GoogleFitData(db.Model):
     date = db.Column(db.Date, nullable=False)
     step_count = db.Column(db.Integer)
     distance_metres = db.Column(db.Float)
-    weight_kg = db.Column(db.Float)
     __tableargs__ = (db.UniqueConstraint(user_id, date))
 
     def days_missing(user):
@@ -33,31 +32,6 @@ class GoogleFitData(db.Model):
             if data_obj.date in expected_dates:
                 expected_dates.remove(data_obj.date)
         return expected_dates
-
-    # TODO Test
-    def get_most_recent_weight(user):
-        datum = GoogleFitData.query.filter_by(
-            user=user
-        ).filter(
-            GoogleFitData.weight_kg.isnot(None)
-        ).order_by(
-            GoogleFitData.date.desc()
-        ).limit(1).first()
-
-        if datum:
-            return datum.weight_kg
-
-        return None
-
-    def get_weight_datapoints_for_user(user):
-        data = GoogleFitData.query.filter_by(
-            user=user
-        ).filter(
-            GoogleFitData.weight_kg.isnot(None)
-        ).all()
-
-        date_weights = ((datum.date, datum.weight_kg) for datum in data)
-        return date_weights
 
     def get_data_for_year(user, year):
         start_date = datetime.date(year, 1, 1)
@@ -81,7 +55,7 @@ class GoogleFitData(db.Model):
 
         return data
 
-    def upsert(user, date, step_count, distance_metres, weight_kg):
+    def upsert(user, date, step_count, distance_metres):
         fit_obj = GoogleFitData.query.filter_by(
             user=user,
             date=date
@@ -92,7 +66,6 @@ class GoogleFitData(db.Model):
             fit_obj.user = user
             fit_obj.date = date
         fit_obj.step_count = step_count
-        fit_obj.weight_kg = weight_kg
         fit_obj.distance_metres = distance_metres
         db.session.add(fit_obj)
         db.session.commit()

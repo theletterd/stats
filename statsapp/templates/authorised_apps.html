@@ -4,18 +4,12 @@
 
   <div>
     authorised shit
-    <div>
-      <a href="{{strava_url}}">Strava auth</a>
-    </div>
-    <div>
-      <a href="{{gsheet_url}}">GSheet auth</a>
-    </div>
-    <div>
-      <a href="{{goodreads_url}}">Goodreads auth</a>
-    </div>
-    <div>
-      <a href="{{googlefit_url}}">Googlefit auth</a>
-      <div>
+    {% for name, url in auth_urls %}
+        <div>
+          <a href="{{url}}">{{name}} auth</a>
+        </div>
+    {% endfor %}
+
 	{% for date_chunk in date_chunks %}
 	    <form class="date-submit-form" action="/googlefit_date" method="post">
 	      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>

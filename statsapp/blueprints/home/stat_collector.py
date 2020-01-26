@@ -6,6 +6,7 @@ from statsapp.collectors.goals import GoalStats
 from statsapp.collectors.googlefit import GoogleFitStats
 from statsapp.collectors.goodreads import GoodreadsStats
 from statsapp.collectors.gsheet import GoogleSheetsStats
+from statsapp.collectors.withings import WithingsStats
 
 
 class StatCollector(object):
@@ -25,6 +26,7 @@ class StatCollector(object):
                 GoodreadsStats.get_stats,
                 GoogleSheetsStats.get_stats,
                 GoalStats.get_stats,
+                WithingsStats.get_stats,
             ]
 
             for getter in stat_getter_methods:
