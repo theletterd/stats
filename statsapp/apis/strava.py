@@ -44,6 +44,10 @@ class StravaAPI(object):
         resp = oauth.strava.get('athlete/activities', params=params, token=token)
         stats = {}
 
+        # TODO
+        # this is pretty intimately tied to the frontpage stats. We should just return the
+        # activities from here and let the consumers decide what to do.
+
         for activity in resp.json():
             year = datetime.datetime.strptime(activity['start_date_local'], '%Y-%m-%dT%H:%M:%SZ').year
             distance_metres = activity['distance']

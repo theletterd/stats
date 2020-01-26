@@ -33,7 +33,7 @@ class WithingsData(db.Model):
             WithingsData.weight_kg.isnot(None)
         ).all()
 
-        date_weights = ((datum.date, datum.weight_kg) for datum in data)
+        date_weights = [(datum.date, datum.weight_kg) for datum in data]
         return date_weights
 
     def upsert(user, date, weight_kg):

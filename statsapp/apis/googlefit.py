@@ -50,10 +50,6 @@ class GoogleFitAPI(object):
                     "dataSourceId": "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps"
                 },
                 {
-                    "dataTypeName": "com.google.weight.summary",
-                    "dataSourceId": "derived:com.google.weight:com.google.android.gms:merge_weight"
-                },
-                {
                     "dataTypeName": "com.google.distance.delta",
                     "dataSourceId": "derived:com.google.distance.delta:com.google.android.gms:merge_distance_delta"
                 }
@@ -67,7 +63,6 @@ class GoogleFitAPI(object):
 
         steps = 0
         distance_metres = 0
-        weight_kg = None
         for bucket in json_response['bucket']:
             steps_datapoints = bucket['dataset'][0]['point']
             if steps_datapoints:
@@ -77,8 +72,4 @@ class GoogleFitAPI(object):
             if distance_datapoints:
                 distance_metres += distance_datapoints[0]['value'][0]['fpVal']
 
-        weight_datapoints = json_response['bucket'][0]['dataset'][1]['point']
-        if weight_datapoints:
-            weight_kg = weight_datapoints[0]['value'][0]['fpVal']
-
-        return steps, distance_metres, weight_kg
+        return steps, distance_metres

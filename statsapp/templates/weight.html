@@ -10,8 +10,16 @@
 	 <canvas id="weight-chart"></canvas>
     </div>
     <script>
-        var data = [
-	    {% for datapoint in data %}
+        var weightData = [
+	    {% for datapoint in weight_data %}
+	        {
+	            x: new Date("{{ datapoint.x }}"),
+	            y: {{ datapoint.y }}
+	        },
+            {% endfor %}
+	];
+        var stepData = [
+	    {% for datapoint in step_data %}
 	        {
 	            x: new Date("{{ datapoint.x }}"),
 	            y: {{ datapoint.y }}
@@ -26,10 +34,17 @@
             data: {
                 datasets: [
 	            {
-	                data: data,
+	                data: weightData,
 	                label: "Weight",
 	                backgroundColor: "#ff9900",
-                    }
+	                yAxisID: 'weight-axis'
+                    },
+	            {
+	                data: stepData,
+	                label: "Steps",
+	                backgroundColor: "#00ff00",
+	                yAxisID: 'step-axis'
+                    },
                 ]
             },
             options: {
@@ -39,9 +54,18 @@
 	                distribution: 'linear',
 	                time: {unit: 'month'},
                     }],
-	            yAxes: [{
-	                scaleLabel: {labelString: "Weight (lbs)", display: true},
-                    }]
+	            yAxes: [
+	                {
+	                    scaleLabel: {labelString: "Weight (lbs)", display: true},
+	                    position: 'left',
+	                    id: 'weight-axis'
+	                },
+    	                {
+	                    scaleLabel: {labelString: "Steps", display: true},
+	                    position: 'right',
+	                    id: 'step-axis'
+                        }
+                    ]
                 },
 	        legend: {display: false},
 	        layout: {
