@@ -10,7 +10,6 @@ class GoogleFitStats(object):
     # so this is presumably where we should be collecting our stats from.
     def get_stats(user):
         return [
-            GoogleFitStats._get_most_recent_weight(user),
             *GoogleFitStats._get_stats_for_current_year(user),
             *GoogleFitStats._get_stats_for_prev_year(user),
             *GoogleFitStats._get_recent_stats(user)

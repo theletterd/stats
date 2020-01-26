@@ -1,26 +1,24 @@
 from statsapp.models.withings import WithingsData
 from statsapp.models.stat import Stat
 from statsapp.tools.util import convert_kg_to_lbs
+from statsapp.tools.util import today_pacific
 
 class WithingsStats(object):
 
     def get_stats(user):
         return [
+            *WithingsStats._get_stats_for_current_year(user),
+            *WithingsStats._get_stats_for_prev_year(user),
             WithingsStats._get_most_recent_weight(user),
         ]
 
-    def _get_most_recent_weight(user):
-        weight_kg = WithingsData.get_most_recent_weight(user)
+    def _get_stats_for_current_year(user):
+        year = today_pacific().year
+        return WithingsStats._get_stats_for_year(user, year, "This year", "current_year")
 
-        if weight_kg:
-            weight_lbs = convert_kg_to_lbs(weight_kg)
-            return Stat(
-                stat_id='weight_lbs_recent',
-                description="Recent Weight (lbs)",
-                value=f"{weight_lbs:.1f}"
-            )
-
-        return None
+    def _get_stats_for_prev_year(user):
+        year = today_pacific().year - 1
+        return WithingsStats._get_stats_for_year(user, year, "Last Year", "prev_year")
 
 
     def _get_stats_for_year(user, year, display_str, stat_str):
@@ -51,3 +49,18 @@ class WithingsStats(object):
                 value='{weight:.1f}'.format(weight=convert_kg_to_lbs(avg_weight_kg))
             )
         ]
+
+
+    def _get_most_recent_weight(user):
+        weight_kg = WithingsData.get_most_recent_weight(user)
+
+        if weight_kg:
+            weight_lbs = convert_kg_to_lbs(weight_kg)
+            return Stat(
+                stat_id='weight_lbs_recent',
+                description="Recent Weight (lbs)",
+                value=f"{weight_lbs:.1f}"
+            )
+
+        return None
+

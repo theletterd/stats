@@ -9,6 +9,19 @@ from statsapp.tools.util import pdt
 from . import oauth
 
 
+def _withings_compliance_fix(session):
+    """ Withings requires client_id and client_secret when refreshing the token"""
+    def _add_client_secrets_to_refresh(url, headers, data):
+        client_id = session.client_id
+        client_secret = session.client_secret
+        # TODO do this less jankily
+        data = f"{data}&client_id={client_id}&client_secret={client_secret}"
+        return url, headers, data
+
+    session.register_compliance_hook(
+        'refresh_token_request', _add_client_secrets_to_refresh
+    )
+
 oauth.register(
     name='withings',
     api_base_url='https://wbsapi.withings.net/',
@@ -18,7 +31,8 @@ oauth.register(
     access_token_params={
         "client_id": current_app.config["WITHINGS_CLIENT_ID"],
         "client_secret": current_app.config["WITHINGS_CLIENT_SECRET"]
-    }
+    },
+    compliance_fix=_withings_compliance_fix
 )
 
 

@@ -4,7 +4,7 @@ from flask import jsonify
 from flask import render_template
 
 from .stat_collector import StatCollector
-from statsapp.models.googlefit import GoogleFitData
+from statsapp.models.withings import WithingsData
 from statsapp.models.user import User
 from statsapp.tools.util import convert_kg_to_lbs
 
@@ -55,7 +55,7 @@ def data():
 @home_app.route("/weight")
 def weight():
     user = User.get_default_user()
-    weight_data = GoogleFitData.get_weight_datapoints_for_user(user)
+    weight_data = WithingsData.get_weight_datapoints_for_user(user)
 
     formatted_weight_data = [
         dict(x=date.isoformat(), y=convert_kg_to_lbs(weight_kg)) for date, weight_kg in weight_data

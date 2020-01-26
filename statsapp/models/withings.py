@@ -1,3 +1,5 @@
+import datetime
+
 from statsapp import db
 
 
@@ -49,3 +51,17 @@ class WithingsData(db.Model):
         db.session.add(withings_obj)
         db.session.commit()
         return withings_obj
+
+    def get_data_for_year(user, year):
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+
+        data = WithingsData.query.filter_by(
+            user=user
+        ).filter(
+            WithingsData.date >= start_date
+        ).filter(
+            WithingsData.date <= end_date
+        ).all()
+
+        return data
