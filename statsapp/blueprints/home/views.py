@@ -1,3 +1,6 @@
+from collections import defaultdict
+import datetime
+
 from flask import Blueprint
 from flask import current_app
 from flask import jsonify
@@ -8,6 +11,7 @@ from statsapp.apis.strava import StravaAPI
 from statsapp.models.googlefit import GoogleFitData
 from statsapp.models.withings import WithingsData
 from statsapp.models.user import User
+from statsapp.tools.util import chunks
 from statsapp.tools.util import convert_kg_to_lbs
 
 home_app = Blueprint('home', __name__)
@@ -60,14 +64,27 @@ def weight():
     weight_data = WithingsData.get_weight_datapoints_for_user(user)
     # that is an assumption. Let's do a sort
     earliest_date = sorted(weight_data, key=lambda x: x[0])[0][0]
-    step_data = GoogleFitData.get_monthly_step_data(user, start_date=earliest_date)
+    step_data = GoogleFitData.get_step_data(user, start_date=earliest_date)
 
     # TODO persist this in a DB
     runs = StravaAPI.get_run_data(user)
 
+
+    step_counts_by_month = defaultdict(int)
+
+    for chunk in chunks(step_data, 28):
+        unchunk = list(chunk)
+        step_count = sum((steps for date, steps in unchunk))
+        date = unchunk[0][0]
+        step_counts_by_month[date] = step_count
+#    for date, step_count in step_data:
+#        month = datetime.date(date.year, date.month, 1)
+#        step_counts_by_month[month] += step_count
+
     formatted_step_data = [
-        dict(x=date.replace(day=15).isoformat(), y=step_count) for date, step_count in step_data.items()
+        dict(x=date.isoformat(), y=step_count) for date, step_count in step_counts_by_month.items()
     ]
+
 
     formatted_weight_data = [
         dict(x=date.isoformat(), y=convert_kg_to_lbs(weight_kg)) for date, weight_kg in weight_data
