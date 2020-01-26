@@ -18,6 +18,8 @@ def app(mocker): # noqa
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///' + db_path,
         'STRAVA_CLIENT_ID': '',
         'STRAVA_CLIENT_SECRET': '',
+        'WITHINGS_CLIENT_ID': '',
+        'WITHINGS_CLIENT_SECRET': '',
         'GOODREADS_CLIENT_ID': '',
         'GOODREADS_CLIENT_SECRET': '',
         'GOODREADS_USERID': '',
@@ -52,4 +54,9 @@ def client(app):
 @pytest.fixture
 def mock_googlefit_api(mocker): # noqa
     m = mocker.patch('statsapp.apis.googlefit.GoogleFitAPI.get_stats_for_date')
+    yield m
+
+@pytest.fixture
+def mock_withings_api(mocker): # noqa
+    m = mocker.patch('statsapp.apis.withings.WithingsAPI.get_weight_data')
     yield m

@@ -7,9 +7,8 @@ from statsapp.tasks.pull_recent_googlefit_data import PullRecentGoogleFitData
 def test_get_data_and_upsert(mock_googlefit_api):
     steps = 1
     distance = 2
-    weight = 3
 
-    mock_googlefit_api.return_value = steps, distance, weight
+    mock_googlefit_api.return_value = steps, distance
     user = User.get_default_user()
     date = datetime.date.today() # doesn't matter what the day is
     PullRecentGoogleFitData().get_data_and_upsert(date, user)
@@ -20,4 +19,3 @@ def test_get_data_and_upsert(mock_googlefit_api):
     datum = data[0]
     assert datum.step_count == steps
     assert datum.distance_metres == distance
-    assert datum.weight_kg == weight

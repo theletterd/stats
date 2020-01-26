@@ -39,7 +39,6 @@ class WithingsAPI(object):
         if end_time > now:
             end_time = now
 
-
         # see https://developer.withings.com/oauth2/#tag/measure
         params = {
             'action': 'getmeas',
