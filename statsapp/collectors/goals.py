@@ -9,7 +9,7 @@ class GoalStats(object):
         # we don't use user here, it's just for consistency's sake
         goal_data = GoalsAPI.get_goals_data()
 
-        year_completion = goal_data['year_completion']
+        year_completion = goal_data['overall_completion']
 
         return [
             Stat(
