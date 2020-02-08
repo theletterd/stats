@@ -68,7 +68,7 @@ class GoogleFitAPI(object):
             if steps_datapoints:
                 steps += steps_datapoints[0]['value'][0]['intVal']
 
-            distance_datapoints = bucket['dataset'][2]['point']
+            distance_datapoints = bucket['dataset'][1]['point']
             if distance_datapoints:
                 distance_metres += distance_datapoints[0]['value'][0]['fpVal']
 
