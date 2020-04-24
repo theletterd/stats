@@ -104,6 +104,19 @@ class GoogleFitYoga(db.Model):
     duration_seconds = db.Column(db.Integer, nullable=False)
     __tableargs__ = (db.UniqueConstraint(user_id, start_time))
 
+    def get_sessions_for_year(user, year):
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+
+        data = GoogleFitYoga.query.filter_by(
+            user=user
+        ).filter(
+            GoogleFitYoga.date >= start_date
+        ).filter(
+            GoogleFitYoga.date <= end_date
+        ).all()
+
+        return data
 
     def upsert(user, date, start_time, duration_seconds):
         yoga_obj = GoogleFitYoga.query.filter_by(

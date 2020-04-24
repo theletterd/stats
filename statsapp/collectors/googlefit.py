@@ -1,9 +1,50 @@
 import datetime
 
 from statsapp.models.googlefit import GoogleFitData
+from statsapp.models.googlefit import GoogleFitYoga
 from statsapp.models.stat import Stat
 from statsapp.tools.util import convert_metres_to_miles
 from statsapp.tools.util import today_pacific
+
+
+class GoogleFitYogaStats(object):
+
+    def get_stats(user):
+        return GoogleFitYogaStats.get_stats_this_year(user)
+
+    def get_stats_this_year(user):
+        year = today_pacific().year
+
+        sessions = GoogleFitYoga.get_sessions_for_year(user, year)
+        total_duration_seconds = 0
+        total_sessions = 0
+
+        for session in sessions:
+            total_sessions += 1
+            total_duration_seconds += session.duration_seconds
+
+        total_minutes = int(total_duration_seconds / 60)
+        average_session_length = int((total_duration_seconds / total_sessions) / 60)
+
+        return [
+            Stat(
+                stat_id='yoga_sessions_current_year',
+                description='Total Yoga Sessions',
+                value=f'{total_sessions}'
+            ),
+            Stat(
+                stat_id='yoga_duration_current_year',
+                description='Time spent doing Yoga (minutes)',
+                value=f'{total_minutes}'
+            ),
+            Stat(
+                stat_id='yoga_avg_duration_current_year',
+                description='Average Yoga Session (minutes)',
+                value=f'{average_session_length}'
+            ),
+        ]
+
+
 
 class GoogleFitStats(object):
 
