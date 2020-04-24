@@ -17,6 +17,7 @@ ORDERED_STAT_GROUPS = [
     current_app.config['MISC_STAT_GROUPS'],
     current_app.config['STEP_STAT_GROUPS'],
     current_app.config['RUNNING_STAT_GROUPS'],
+    current_app.config['YOGA_STAT_GROUPS'],
     current_app.config['WEIGHT_STAT_GROUPS'],
     current_app.config['BOOK_STAT_GROUPS'],
 ]

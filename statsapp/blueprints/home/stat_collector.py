@@ -4,6 +4,7 @@ from statsapp.models.stat import Stat
 from statsapp.collectors.strava import StravaStats
 from statsapp.collectors.goals import GoalStats
 from statsapp.collectors.googlefit import GoogleFitStats
+from statsapp.collectors.googlefit import GoogleFitYogaStats
 from statsapp.collectors.goodreads import GoodreadsStats
 from statsapp.collectors.gsheet import GoogleSheetsStats
 from statsapp.collectors.withings import WithingsStats
@@ -22,6 +23,7 @@ class StatCollector(object):
 
             stat_getter_methods = [
                 GoogleFitStats.get_stats,
+                GoogleFitYogaStats.get_stats,
                 StravaStats.get_stats,
                 GoodreadsStats.get_stats,
                 GoogleSheetsStats.get_stats,

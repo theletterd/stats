@@ -69,6 +69,19 @@ MISC_STAT_GROUPS = {
     ]
 }
 
+YOGA_STAT_GROUPS = {
+    'description': 'Year of Yoga',
+    'stat_group_id': 'yoga_stats',
+    'stat_groups': [
+        [
+            'yoga_sessions_current_year',
+#            'yoga_avg_duration_current_year',
+            'yoga_duration_current_year'
+
+        ]
+    ]
+    }
+
 STEP_STAT_GROUPS = {
     'description': 'Steps',
     'stat_group_id': 'step_stats',

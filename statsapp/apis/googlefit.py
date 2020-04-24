@@ -73,3 +73,47 @@ class GoogleFitAPI(object):
                 distance_metres += distance_datapoints[0]['value'][0]['fpVal']
 
         return steps, distance_metres
+
+
+    def get_yoga_sessions(end_date, num_days, user):
+        assert type(end_date) is datetime.date
+
+        token = fetch_token('googlefit', user)
+
+        end_date = end_date + datetime.timedelta(days=1) # include anything that happened on that day.
+        end_date = pdt.localize(datetime.datetime(end_date.year, end_date.month, end_date.day))
+        start_date = end_date - datetime.timedelta(days=num_days)
+
+        # really annoying, this has to be in rfc3339 (which is pretty comparable to iso8601)
+        start_time = start_date.timestamp()
+        end_time = end_date.timestamp()
+
+        now = int(time.time())
+        if end_time > now:
+            end_time = now
+
+        # oh yeah this is some bullshit.
+        end_isoformat = datetime.datetime.fromtimestamp(end_time).isoformat() + "Z"
+        start_isoformat = datetime.datetime.fromtimestamp(start_time).isoformat() + "Z"
+
+        params = {
+            "activityType": 100, # Yoga, from https://developers.google.com/fit/rest/v1/reference/activity-types
+            "startTime": start_isoformat,
+            "endTime": end_isoformat
+        }
+        resp = oauth.googlefit.get('me/sessions', params=params, token=token)
+        json_response = resp.json()
+        sessions = []
+        for session in json_response["session"]:
+            session_start_time = int(int(session["startTimeMillis"]) / 1000)
+            session_end_time = int(int(session["endTimeMillis"]) / 1000)
+            duration_seconds = (session_end_time - session_start_time)
+            date = pdt.localize(datetime.datetime.fromtimestamp(session_start_time)).date()
+            session_data = dict(
+                start_time=session_start_time,
+                duration_seconds=duration_seconds,
+                date=date
+            )
+            sessions.append(session_data)
+
+        return sessions

@@ -6,6 +6,7 @@ import statsapp
 from statsapp import db
 from statsapp.models.user import User
 from statsapp.models.googlefit import GoogleFitData
+from statsapp.models.googlefit import GoogleFitYoga
 from statsapp.tools import util
 
 date_parser = lambda s: datetime.date.fromisoformat(s)
@@ -30,7 +31,7 @@ class PullRecentGoogleFitData(object):
         self.start_date = self.args.start_date or (self.end_date - datetime.timedelta(days=1))
         self.user_id = self.args.user_id
 
-    def get_data_and_upsert(self, date, user):
+    def get_step_data_and_upsert(self, date, user):
         with self.app.app_context():
             db.session.add(user)
 
@@ -46,6 +47,27 @@ class PullRecentGoogleFitData(object):
                 distance_metres
             )
 
+    def get_30_day_yoga_sessions(self, end_date, user):
+        with self.app.app_context():
+            db.session.add(user)
+
+            # because oauth stuff needs to be initialised/imported inside an app context
+            from statsapp.apis.googlefit import GoogleFitAPI
+            print(f"Getting yoga data for {user} 30 days previous to {end_date}")
+            sessions = GoogleFitAPI.get_yoga_sessions(end_date, 30, user)
+            for session in sessions:
+                session_date = session['date']
+                session_start_time = session['start_time']
+                session_duration = session['duration_seconds']
+                print(f"{session_date}: duration - {session_duration} seconds")
+                GoogleFitYoga.upsert(
+                    user,
+                    session_date,
+                    session_start_time,
+                    session_duration
+                )
+
+
     def run(self):
         dates = util.get_dates_between(self.start_date, self.end_date)
         with self.app.app_context():
@@ -57,10 +79,17 @@ class PullRecentGoogleFitData(object):
         for user in users:
             for date in dates:
                 try:
-                    self.get_data_and_upsert(date, user)
+                    self.get_step_data_and_upsert(date, user)
                 except Exception as e:
                     print(f"failed to get data for {user} on {date}")
                     logging.exception(e)
+
+            try:
+                self.get_30_day_yoga_sessions(self.end_date, user)
+            except Exception as e:
+                print(f"failed to get yoga data for {user} ending on {self.end_date}")
+                logging.exception(e)
+
 
 
 if __name__ == '__main__':
