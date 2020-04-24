@@ -93,3 +93,30 @@ class GoogleFitData(db.Model):
         db.session.add(fit_obj)
         db.session.commit()
         return fit_obj
+
+
+class GoogleFitYoga(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship("User")
+    date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Integer, nullable=False)
+    duration_seconds = db.Column(db.Integer, nullable=False)
+    __tableargs__ = (db.UniqueConstraint(user_id, start_time))
+
+
+    def upsert(user, date, start_time, duration_seconds):
+        yoga_obj = GoogleFitYoga.query.filter_by(
+            user=user,
+            start_time=start_time
+        ).first()
+
+        if not yoga_obj:
+            yoga_obj = GoogleFitYoga()
+            yoga_obj.user = user
+            yoga_obj.start_time = start_time
+            yoga_obj.date = date
+            yoga_obj.duration_seconds = duration_seconds
+            db.session.add(yoga_obj)
+            db.session.commit()
+        return yoga_obj
