@@ -61,13 +61,18 @@ def weight():
     weight_data = WithingsData.get_weight_datapoints_for_user(user)
     # that is an assumption. Let's do a sort
     earliest_date = sorted(weight_data, key=lambda x: x[0])[0][0]
-    step_data = GoogleFitData.get_monthly_step_data(user, start_date=earliest_date)
 
     # TODO persist this in a DB
     runs = StravaAPI.get_run_data(user)
 
+    #monthly_step_data = GoogleFitData.get_monthly_step_data(user, start_date=earliest_date)
+    #formatted_step_data = [
+    #    dict(x=date.replace(day=15).isoformat(), y=step_count) for date, step_count in monthly_step_data.items()
+    #]
+
+    weekly_step_data = GoogleFitData.get_weekly_step_data(user, start_date=earliest_date)
     formatted_step_data = [
-        dict(x=date.replace(day=15).isoformat(), y=step_count) for date, step_count in step_data.items()
+        dict(x=date.isoformat(), y=step_count) for date, step_count in weekly_step_data.items()
     ]
 
     formatted_weight_data = [

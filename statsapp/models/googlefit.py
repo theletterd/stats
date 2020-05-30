@@ -57,7 +57,6 @@ class GoogleFitData(db.Model):
         return data
 
     def get_monthly_step_data(user, start_date=None):
-
         query = GoogleFitData.query.filter_by(
             user=user
         )
@@ -77,6 +76,30 @@ class GoogleFitData(db.Model):
             step_counts_by_month[month] += datum.step_count
 
         return step_counts_by_month
+
+    def get_weekly_step_data(user, start_date=None):
+        query = GoogleFitData.query.filter_by(
+            user=user
+        )
+
+        if start_date:
+            query = query.filter(
+                GoogleFitData.date >= start_date
+            )
+
+        data = query.order_by(
+            GoogleFitData.date.desc()
+        ).all()
+
+        step_counts_by_week = defaultdict(int)
+
+        for datum in data:
+            d = datum.date
+            # get start of week date
+            week_date = d - datetime.timedelta(days=d.weekday())
+            step_counts_by_week[week_date] += datum.step_count
+
+        return step_counts_by_week
 
     def upsert(user, date, step_count, distance_metres):
         fit_obj = GoogleFitData.query.filter_by(
