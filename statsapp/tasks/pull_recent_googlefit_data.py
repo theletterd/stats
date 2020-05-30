@@ -28,7 +28,7 @@ class PullRecentGoogleFitData(object):
 
     def process_args(self):
         self.end_date = self.args.end_date or util.today_pacific()
-        self.start_date = self.args.start_date or (self.end_date - datetime.timedelta(days=1))
+        self.start_date = self.args.start_date or (self.end_date - datetime.timedelta(days=7))
         self.user_id = self.args.user_id
 
     def get_step_data_and_upsert(self, date, user):
