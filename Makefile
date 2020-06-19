@@ -1,5 +1,6 @@
 runlocal:
-        FLASK_DEBUG=1 FLASK_APP="statsapp:create_app" flask run
+	@echo "Running local copy"
+	FLASK_DEBUG=1 FLASK_APP="statsapp:create_app" flask run
 
 initialise_environment:
 	@echo "Clearing existing env"
