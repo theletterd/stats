@@ -6,6 +6,7 @@ from flask import render_template
 from .stat_collector import StatCollector
 from statsapp.apis.strava import StravaAPI
 from statsapp.models.googlefit import GoogleFitData
+from statsapp.models.googlefit import GoogleFitYoga
 from statsapp.models.withings import WithingsData
 from statsapp.models.user import User
 from statsapp.tools.util import convert_kg_to_lbs
@@ -83,10 +84,18 @@ def weight():
         dict(x=date.date().isoformat(), y=1) for date, distance_metres in runs if date.date() >= earliest_date
     ]
 
+    # if I do >1 yoga session a day, this screws up the chart.
+    # we need to just extract the dates.
+    yoga_sessions = GoogleFitYoga.get_sessions(user, start_date=earliest_date)
+    yoga_dates = set(session.date for session in yoga_sessions)
+    formatted_yoga_data = [
+        dict(x=yoga_date.isoformat(), y=1) for yoga_date in yoga_dates if yoga_date >= earliest_date
+    ]
     context = {
         'weight_data': formatted_weight_data,
         'step_data': formatted_step_data,
         'run_data': formatted_run_data,
+        'yoga_data': formatted_yoga_data,
     }
     return render_template('weight.html', **context)
 

@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <div style="width: 1400px; background-color: #1b1b17; margin: auto">
+    <div style="width: 1400px; background-color: #161619; margin: auto">
 	 <canvas id="weight-chart"></canvas>
     </div>
     <script>
@@ -34,6 +34,14 @@
 	        },
             {% endfor %}
 	];
+        var yogaData = [
+	    {% for datapoint in yoga_data %}
+	        {
+	            x: new Date("{{ datapoint.x }}"),
+	            y: {{ datapoint.y }}
+	        },
+            {% endfor %}
+	];
         var ctx = document.getElementById('weight-chart').getContext('2d');
 	ctx.canvas.width = 1000;
 	ctx.canvas.height = 400;
@@ -45,21 +53,28 @@
 	                data: weightData,
 	                label: "Weight",
 	                backgroundColor: "#ff9900",
-	                yAxisID: 'weight-axis'
+	                yAxisID: 'weight-axis',
                     },
 	            {
 	                type: 'scatter',
 	                data: stepData,
 	                label: "Steps",
 	                backgroundColor: "#5500cd",
-	                yAxisID: 'step-axis'
+	                yAxisID: 'step-axis',
                     },
 	            {
 	                type: 'bar',
 	                data: runData,
 	                label: "Runs",
-	                backgroundColor: "#550000",
-	                yAxisID: 'run-axis'
+	                backgroundColor: "#770000",
+	                yAxisID: 'run-axis',
+                    },
+	            {
+	                type: 'bar',
+	                data: yogaData,
+	                label: "Yoga",
+	                backgroundColor: "#0000ff",
+	                yAxisID: 'yoga-axis',
                     },
                 ]
             },
@@ -82,11 +97,17 @@
 	                    id: 'step-axis'
                         },
     	                {
-	                    scaleLabel: {labelString: "Run distance", display: false},
+	                    scaleLabel: {labelString: "Run", display: false},
 	                    id: 'run-axis',
 	                    display: false,
 	                    ticks: {max: 1.0, min: 0}
-                        }
+                        },
+    	                {
+	                    scaleLabel: {labelString: "Yoga Session", display: false},
+	                    id: 'yoga-axis',
+	                    display: false,
+	                    ticks: {max: 1.0, min: 0}
+                        },
                     ]
                 },
 	        legend: {display: false},
