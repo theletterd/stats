@@ -13,7 +13,14 @@ class GoogleSheetsStats(object):
         stats = []
 
         for stat_dict in stat_dicts:
-            stats.append(Stat(**stat_dict))
+            stats.append(
+                Stat(
+                    stat_id=stat_dict.get('stat_id'),
+                    description=stat_dict.get('description'),
+                    value=stat_dict.get('value'),
+                    notes=stat_dict.get('notes','')
+                )
+            )
 
         return stats
 
