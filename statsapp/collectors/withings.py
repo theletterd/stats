@@ -36,17 +36,20 @@ class WithingsStats(object):
             Stat(
                 stat_id=f'weight_lbs_min_{stat_str}',
                 description=f'Min Weight {display_str}',
-                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(min_weight_kg))
+                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(min_weight_kg)),
+                notes=''
             ),
             Stat(
                 stat_id=f'weight_lbs_max_{stat_str}',
                 description=f'Max Weight {display_str}',
-                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(max_weight_kg))
+                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(max_weight_kg)),
+                notes=''
             ),
             Stat(
                 stat_id=f'weight_lbs_avg_{stat_str}',
                 description=f'Avg Weight {display_str}',
-                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(avg_weight_kg))
+                value='{weight:.1f}'.format(weight=convert_kg_to_lbs(avg_weight_kg)),
+                notes=''
             )
         ]
 
@@ -59,7 +62,8 @@ class WithingsStats(object):
             return Stat(
                 stat_id='weight_lbs_recent',
                 description="Recent Weight (lbs)",
-                value=f"{weight_lbs:.1f}"
+                value=f"{weight_lbs:.1f}",
+                notes=''
             )
 
         return None

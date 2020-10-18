@@ -27,7 +27,8 @@ class GoodreadsStats(object):
         return Stat(
             stat_id="read_prev_year",
             description="Books I read last year",
-            value=titles
+            value=titles,
+            notes=''
         )
 
     @cache.cached(key_prefix='read_current_year', timeout=60*60)
@@ -37,7 +38,8 @@ class GoodreadsStats(object):
         return Stat(
             stat_id="read_current_year",
             description="Books I read this year",
-            value=titles
+            value=titles,
+            notes=''
         )
 
     @cache.cached(key_prefix='currently_reading', timeout=60*60)
@@ -46,5 +48,6 @@ class GoodreadsStats(object):
         return Stat(
             stat_id="currently_reading",
             description="Reading",
-            value=title
+            value=title,
+            notes=''
         )
