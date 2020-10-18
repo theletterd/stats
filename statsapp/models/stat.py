@@ -7,6 +7,5 @@ Stat = namedtuple(
         'description',
         'value',
         'notes',
-    ),
-    defaults=('',)
+    )
 )

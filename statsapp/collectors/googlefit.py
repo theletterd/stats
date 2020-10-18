@@ -30,17 +30,20 @@ class GoogleFitYogaStats(object):
             Stat(
                 stat_id='yoga_sessions_current_year',
                 description='Total Yoga Sessions',
-                value=f'{total_sessions}'
+                value=f'{total_sessions}',
+                notes=''
             ),
             Stat(
                 stat_id='yoga_duration_current_year',
                 description='Time spent doing Yoga (minutes)',
-                value=f'{total_minutes}'
+                value=f'{total_minutes}',
+                notes=''
             ),
             Stat(
                 stat_id='yoga_avg_duration_current_year',
                 description='Average Yoga Session (minutes)',
-                value=f'{average_session_length}'
+                value=f'{average_session_length}',
+                notes=''
             ),
         ]
 
@@ -79,6 +82,7 @@ class GoogleFitStats(object):
                 stat_id=f'step_count_{stat_str}',
                 description=f'Steps {display_str}',
                 value='{steps:,}'.format(steps=step_count),
+                notes=''
             ),
             Stat(
                 stat_id=f'distance_miles_{stat_str}',
@@ -99,7 +103,8 @@ class GoogleFitStats(object):
                 Stat(
                     stat_id='step_count_today',
                     description='Steps Today',
-                    value='{steps:,}'.format(steps=data_today.step_count)
+                    value='{steps:,}'.format(steps=data_today.step_count),
+                    notes=''
                 )
             )
             stats.append(
@@ -118,6 +123,7 @@ class GoogleFitStats(object):
                     stat_id='step_count_yesterday',
                     description='Steps Yesterday',
                     value='{steps:,}'.format(steps=data_yesterday.step_count),
+                    notes=''
                 )
             )
             stats.append(

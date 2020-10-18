@@ -35,22 +35,26 @@ class StravaStats(object):
             Stat(
                 stat_id='distance_run_current_year_miles',
                 description='Distance this year (miles)',
-                value=f"{distance_current_year:.2f}"
+                value=f"{distance_current_year:.2f}",
+                notes=''
             ),
             Stat(
                 stat_id='distance_run_prev_year_miles',
                 description='Distance last year (miles)',
-                value=f"{distance_last_year:.2f}"
+                value=f"{distance_last_year:.2f}",
+                notes=''
             ),
             Stat(
                 stat_id='run_count_current_year',
                 description='Runs this year',
-                value=run_data.get(current_year, {}).get('run_count', 0)
+                value=run_data.get(current_year, {}).get('run_count', 0),
+                notes=''
             ),
             Stat(
                 stat_id='run_count_prev_year',
                 description='Runs last year',
-                value=run_data.get(prev_year, {}).get('run_count', 0)
+                value=run_data.get(prev_year, {}).get('run_count', 0),
+                notes=''
             )
         ]
 
