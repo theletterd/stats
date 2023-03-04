@@ -18,8 +18,17 @@ def _withings_compliance_fix(session):
         data = f"{data}&client_id={client_id}&client_secret={client_secret}"
         return url, headers, data
 
+    def _fix_token_response(resp):
+        # withings sticks all the token stuff in a `body` dict, so gonna just pull that up
+        token_data = resp.json()['body']
+        resp.json = lambda: token_data
+        return resp
+
     session.register_compliance_hook(
         'refresh_token_request', _add_client_secrets_to_refresh
+    )
+    session.register_compliance_hook(
+        'access_token_response', _fix_token_response
     )
 
 oauth.register(
@@ -27,10 +36,11 @@ oauth.register(
     api_base_url='https://wbsapi.withings.net/',
     authorize_url='https://account.withings.com/oauth2_user/authorize2',
     authorize_params={'scope':'user.metrics'},
-    access_token_url='https://account.withings.com/oauth2/token',
+    access_token_url='https://wbsapi.withings.net/v2/oauth2',
     access_token_params={
         "client_id": current_app.config["WITHINGS_CLIENT_ID"],
-        "client_secret": current_app.config["WITHINGS_CLIENT_SECRET"]
+        "client_secret": current_app.config["WITHINGS_CLIENT_SECRET"],
+        "action": "requesttoken"
     },
     compliance_fix=_withings_compliance_fix
 )
