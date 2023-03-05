@@ -4,6 +4,7 @@ import logging
 
 import statsapp
 from statsapp import db
+from statsapp.apis.withings import WithingsAPI
 from statsapp.models.user import User
 from statsapp.models.withings import WithingsData
 from statsapp.tools import util
@@ -31,23 +32,19 @@ class PullWithingsData(object):
         self.user_id = self.args.user_id
 
     def get_data_and_upsert(self, date, user):
-        with self.app.app_context():
-            db.session.add(user)
-
-            # because oauth stuff needs to be initialised/imported inside an app context
-            from statsapp.apis.withings import WithingsAPI
-            print(f"Getting withings data for {user} on {date}")
-            weight_kg = WithingsAPI.get_weight_data(date, user)
-            print(f"{date}: weight - {weight_kg}")
-            if weight_kg:
-                WithingsData.upsert(
-                    user,
-                    date,
-                    weight_kg
-                )
+        print(f"Getting withings data for {user} on {date}")
+        weight_kg = WithingsAPI.get_weight_data(date, user)
+        print(f"{date}: weight - {weight_kg}")
+        if weight_kg:
+            WithingsData.upsert(
+                user,
+                date,
+                weight_kg
+            )
 
     def run(self):
         dates = util.get_dates_between(self.start_date, self.end_date)
+
         with self.app.app_context():
             if not self.user_id:
                 users = User.query.all()

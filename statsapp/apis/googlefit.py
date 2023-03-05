@@ -3,6 +3,7 @@ import time
 
 from flask import current_app
 
+from statsapp import config
 from statsapp.models.oauth import fetch_token
 from statsapp.tools.util import pdt
 
@@ -20,8 +21,8 @@ oauth.register(
     # used for getting the token
     access_token_url='https://accounts.google.com/o/oauth2/token',
     access_token_params={
-        'client_id': current_app.config['GOOGLEFIT_CLIENT_ID'],
-        'client_secret': current_app.config['GOOGLEFIT_CLIENT_SECRET'],
+        'client_id': config.GOOGLEFIT_CLIENT_ID,
+        'client_secret': config.GOOGLEFIT_CLIENT_SECRET,
     }
 )
 

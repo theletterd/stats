@@ -3,7 +3,7 @@ from flask import current_app
 from statsapp import login_manager
 from statsapp import bcrypt
 from statsapp import db
-
+from sqlalchemy.orm import sessionmaker
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,14 +28,15 @@ class User(db.Model):
 
     @staticmethod
     def create_user(email, password):
-        # I only expect this to be called from the command line.
         hashed_password = bcrypt.generate_password_hash(
             password.encode("utf-8")
         )
 
+        # I only expect this to be called from the command line.
         user = User(email=email, password_hash=hashed_password)
         db.session.add(user)
         db.session.commit()
+
         return user
 
     @staticmethod
