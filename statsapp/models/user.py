@@ -3,7 +3,7 @@ from flask import current_app
 from statsapp import login_manager
 from statsapp import bcrypt
 from statsapp import db
-from sqlalchemy.orm import sessionmaker
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
