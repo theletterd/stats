@@ -16,7 +16,7 @@ def _withings_compliance_fix(session):
         client_id = session.client_id
         client_secret = session.client_secret
         # TODO do this less jankily
-        data = f"{data}&client_id={client_id}&client_secret={client_secret}"
+        data = f"{data}&action=requesttoken&client_id={client_id}&client_secret={client_secret}"
         return url, headers, data
 
     def _fix_token_response(resp):
@@ -73,7 +73,6 @@ class WithingsAPI(object):
             'enddate': end_time, # epochtime,
             'offset': 0 # only care about first reading
         }
-
         resp = oauth.withings.get('measure', token=token, params=params)
         json_response = resp.json()
 

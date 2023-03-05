@@ -16,7 +16,6 @@ date_parser = lambda s: datetime.date.fromisoformat(s)
 class PullRecentGoogleFitData(object):
 
     def __init__(self, argv=None):
-        self.app = statsapp.create_app()
         self.setup_parser(argv)
         self.process_args()
 
@@ -62,11 +61,11 @@ class PullRecentGoogleFitData(object):
 
     def run(self):
         dates = util.get_dates_between(self.start_date, self.end_date)
-        with self.app.app_context():
-            if not self.user_id:
-                users = User.query.all()
-            else:
-                users = [User.get_default_user()]
+
+        if not self.user_id:
+            users = User.query.all()
+        else:
+            users = [User.get_default_user()]
 
         for user in users:
             for date in dates:
@@ -85,4 +84,6 @@ class PullRecentGoogleFitData(object):
 
 
 if __name__ == '__main__':
-    PullRecentGoogleFitData().run()
+    app = statsapp.create_app()
+    with app.app_context():
+        PullRecentGoogleFitData().run()

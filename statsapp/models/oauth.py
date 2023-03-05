@@ -1,6 +1,8 @@
 from flask import current_app
 
+from statsapp import config
 from statsapp import db
+from statsapp import db_util
 from statsapp.models.user import User
 
 
@@ -96,7 +98,7 @@ def fetch_token(name, user=None):
     if user is None:
         user = User.get_default_user()
 
-    if name in current_app.config['OAUTH1_SERVICES']:
+    if name in config.OAUTH1_SERVICES:
         model = OAuth1Token
     else:
         model = OAuth2Token
