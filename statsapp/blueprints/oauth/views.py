@@ -28,5 +28,6 @@ def authorize(name):
         model = OAuth1Token
     else:
         model = OAuth2Token
+
     model.upsert_token(name, token, current_user)
     return redirect('/')
