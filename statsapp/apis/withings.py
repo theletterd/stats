@@ -31,6 +31,9 @@ def _withings_compliance_fix(session):
     session.register_compliance_hook(
         'access_token_response', _fix_token_response
     )
+    session.register_compliance_hook(
+        'refresh_token_response', _fix_token_response
+    )
 
 oauth.register(
     name='withings',
