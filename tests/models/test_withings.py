@@ -17,5 +17,3 @@ def test_get_most_recent_weight():
 
     weight = WithingsData.get_most_recent_weight(user)
     assert weight == 5
-
-

@@ -3,6 +3,7 @@ import time
 
 from flask import current_app
 
+from statsapp import config
 from statsapp.models.oauth import fetch_token
 from statsapp.tools.util import pdt
 
@@ -38,8 +39,8 @@ oauth.register(
     authorize_params={'scope':'user.metrics'},
     access_token_url='https://wbsapi.withings.net/v2/oauth2',
     access_token_params={
-        "client_id": current_app.config["WITHINGS_CLIENT_ID"],
-        "client_secret": current_app.config["WITHINGS_CLIENT_SECRET"],
+        "client_id": config.WITHINGS_CLIENT_ID,
+        "client_secret": config.WITHINGS_CLIENT_SECRET,
         "action": "requesttoken"
     },
     compliance_fix=_withings_compliance_fix

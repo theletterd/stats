@@ -6,6 +6,8 @@ from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
+from . import db_util
+
 csrf = CSRFProtect()
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -13,7 +15,7 @@ bcrypt = Bcrypt()
 cache = Cache()
 
 
-def create_app(test_config=None):
+def create_app(config=None):
     # if we're already in an app-context (e.g, in testing), don't create another one
     if current_app:
         return current_app
@@ -21,11 +23,14 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_object('statsapp.config')
+    app.config.update(db_util.get_db_config())
+    app.config.update(db_util.get_cache_config())
 
-    if test_config is None:
-        app.config.from_pyfile('config.py')
+    if config:
+        app.config.update(config)
     else:
-        app.config.update(test_config)
+        # read from the instance config
+        app.config.from_pyfile('config.py')
 
 
     with app.app_context():

@@ -11,7 +11,7 @@ def test_get_data_and_upsert(mock_googlefit_api):
     mock_googlefit_api.return_value = steps, distance
     user = User.get_default_user()
     date = datetime.date.today() # doesn't matter what the day is
-    PullRecentGoogleFitData().get_step_data_and_upsert(date, user)
+    PullRecentGoogleFitData(argv=[]).get_step_data_and_upsert(date, user)
 
     data = GoogleFitData.query.all()
     assert len(data) == 1

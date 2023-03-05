@@ -1,119 +1,23 @@
-CACHE_TYPE = 'memcached'
-CACHE_DEFAULT_TIMEOUT = 10 # 60 * 60 * 24
-CACHE_MEMCACHED_SERVERS = ['localhost:20583']
-CACHE_KEY_PREFIX = 'stats_app_stats'
-
-
-SQLALCHEMY_DATABASE_URI = 'sqlite:///./sqlite_database'
-SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 OAUTH1_SERVICES = {'goodreads'}
 
+SECRET_KEY = ""
 
-WEIGHT_STAT_GROUPS = {
-    'description': 'Weight (lbs)',
-    'stat_group_id': 'weight_stats',
-    'stat_groups': [
-        ['weight_lbs_recent'],
-        [
-            'weight_lbs_min_current_year',
-            'weight_lbs_avg_current_year',
-            'weight_lbs_max_current_year'
-        ],
-        [
-            'weight_lbs_min_prev_year',
-            'weight_lbs_avg_prev_year',
-            'weight_lbs_max_prev_year',
-        ]
-    ]
-}
+DEFAULT_USER_EMAIL = ""
 
-BOOK_STAT_GROUPS = {
-    'description': 'Books',
-    'stat_group_id': 'book_stats',
-    'stat_groups': [
-        ['currently_reading'],
-        [
-            'read_current_year',
-            'read_prev_year'
-        ],
-    ]
-}
+GOODREADS_CLIENT_ID = ""
+GOODREADS_USERID = ""
+GOODREADS_CLIENT_SECRET = ""
 
-MISC_STAT_GROUPS = {
-    'description': 'Miscellaneous Stats',
-    'stat_group_id': 'misc_stats',
-    'stat_groups': [
-        [
-            'age',
-            'height',
-            'wife_count',
-            'married_years',
-            'children_count',
-            'birkenstock_count',
-        ],
-        [
-            'piercings_current',
-            'piercing_instances',
-            'tattoo_count',
-            'surgery_count'
-        ],
-        [
-            'tshirt_size',
-            'shoe_size_us_mens',
-            'shoe_size_us_womens',
-            'dress_size_us',
-            'max_pullup_count'
-        ],
-        ['goal_completion'],
-    ]
-}
+STRAVA_CLIENT_ID = 0
+STRAVA_CLIENT_SECRET = ""
 
-YOGA_STAT_GROUPS = {
-    'description': 'Year of Yoga',
-    'stat_group_id': 'yoga_stats',
-    'stat_groups': [
-        [
-            'yoga_sessions_current_year',
-#            'yoga_avg_duration_current_year',
-            'yoga_duration_current_year'
+GSHEET_CLIENT_ID = ""
+GSHEET_CLIENT_SECRET = ""
+GSHEET_DOC_ID = ""
 
-        ]
-    ]
-    }
+GOOGLEFIT_CLIENT_ID = ""
+GOOGLEFIT_CLIENT_SECRET = ""
 
-STEP_STAT_GROUPS = {
-    'description': 'Steps',
-    'stat_group_id': 'step_stats',
-    'stat_groups': [
-        [
-            'step_count_today',
-            'step_count_yesterday',
-            'distance_miles_today',
-            'distance_miles_yesterday',
-        ],
-        [
-            'step_count_current_year',
-            'step_count_prev_year',
-        ],
-        [
-            'distance_miles_current_year',
-            'distance_miles_prev_year',
-        ]
-    ]
-}
-
-RUNNING_STAT_GROUPS = {
-    'description': 'Runs',
-    'stat_group_id': 'run_stats',
-    'stat_groups': [
-        [
-            'run_count_current_year',
-            'run_count_prev_year',
-        ],
-        [
-            'distance_run_current_year_miles',
-            'distance_run_prev_year_miles',
-        ]
-    ]
-}
+WITHINGS_CLIENT_ID = ""
+WITHINGS_CLIENT_SECRET = ""
