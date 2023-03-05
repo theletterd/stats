@@ -1,8 +1,8 @@
 from flask import Blueprint
-from flask import current_app
 from flask import jsonify
 from flask import render_template
 
+from . import view_config
 from .stat_collector import StatCollector
 from statsapp.apis.strava import StravaAPI
 from statsapp.models.googlefit import GoogleFitData
@@ -15,12 +15,12 @@ home_app = Blueprint('home', __name__)
 
 
 ORDERED_STAT_GROUPS = [
-    current_app.config['MISC_STAT_GROUPS'],
-    current_app.config['STEP_STAT_GROUPS'],
-    current_app.config['RUNNING_STAT_GROUPS'],
-    current_app.config['YOGA_STAT_GROUPS'],
-    current_app.config['WEIGHT_STAT_GROUPS'],
-    current_app.config['BOOK_STAT_GROUPS'],
+    view_config.MISC_STAT_GROUPS,
+    view_config.STEP_STAT_GROUPS,
+    view_config.RUNNING_STAT_GROUPS,
+    view_config.YOGA_STAT_GROUPS,
+    view_config.WEIGHT_STAT_GROUPS,
+    view_config.BOOK_STAT_GROUPS,
 ]
 
 
@@ -120,5 +120,3 @@ def _get_populated_stat_groups(raw_stats, stat_group):
             populated_stat_groups.append(populated_stat_group)
 
     return populated_stat_groups
-
-
