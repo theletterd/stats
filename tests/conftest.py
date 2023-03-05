@@ -13,7 +13,7 @@ from statsapp import db
 from statsapp.models.user import User
 
 
-@pytest.fixture(autouse=True, scope='session') # ideally make this scoped to session
+@pytest.fixture(autouse=True, scope='session')
 def testing_database(session_mocker):
     db_fd, db_path = tempfile.mkstemp()
     print(db_path)
