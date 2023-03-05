@@ -1,9 +1,0 @@
-OK look
-
-If we can make the config loading a bit more sane/uniform, then it makes it easier
-to do some of the database definition.
-
-I guess we could probably just start with a db_util thing that surfaces the database_uri?
-but then where is it defined anyway?? eugh.
-
-I am starting to hate all the reading things from the app context
