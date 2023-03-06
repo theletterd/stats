@@ -69,11 +69,6 @@ def weight():
     # TODO persist this in a DB
     strava_activity_data = StravaAPI.get_activity_data(user)
 
-    #monthly_step_data = GoogleFitData.get_monthly_step_data(user, start_date=earliest_date)
-    #formatted_step_data = [
-    #    dict(x=date.replace(day=15).isoformat(), y=step_count) for date, step_count in monthly_step_data.items()
-    #]
-
     weekly_step_data = GoogleFitData.get_weekly_step_data(user, start_date=earliest_date)
     formatted_step_data = [
         dict(x=date.isoformat(), y=step_count) for date, step_count in weekly_step_data.items()
@@ -100,6 +95,8 @@ def weight():
         weight_moving_average.append(dict(x=weight_date, y=mean_weight))
 
 
+
+
     # if I do >1 run/strava session a day, this screws up the chart.
     # we need to just extract the dates.
     run_distances = defaultdict(float)
@@ -119,7 +116,7 @@ def weight():
     ]
     context = {
         'weight_data': formatted_weight_data,
-        'averaged_weight_data': weight_moving_average,
+        'weight_moving_average': weight_moving_average,
         'step_data': formatted_step_data,
         'run_data': formatted_run_data,
         'yoga_data': formatted_yoga_data,
