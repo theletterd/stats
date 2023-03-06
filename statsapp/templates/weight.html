@@ -18,8 +18,8 @@
 	        },
             {% endfor %}
 	];
-        var averagedWeightData = [
-	    {% for datapoint in averaged_weight_data %}
+        var weightMovingAverage = [
+	    {% for datapoint in weight_moving_average %}
 	        {
 	            x: new Date("{{ datapoint.x }}"),
 	            y: {{ datapoint.y }}
@@ -65,7 +65,7 @@
                     },
 	            {
 	                type: 'line',
-	                data: averagedWeightData,
+	                data: weightMovingAverage,
 	                label: "Weight",
 	                borderColor: "#00ffee",
 	                yAxisID: 'weight-axis',
