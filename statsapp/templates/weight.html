@@ -18,6 +18,14 @@
 	        },
             {% endfor %}
 	];
+        var averagedWeightData = [
+	    {% for datapoint in averaged_weight_data %}
+	        {
+	            x: new Date("{{ datapoint.x }}"),
+	            y: {{ datapoint.y }}
+	        },
+            {% endfor %}
+	];
         var stepData = [
 	    {% for datapoint in step_data %}
 	        {
@@ -56,6 +64,16 @@
 	                yAxisID: 'weight-axis',
                     },
 	            {
+	                type: 'line',
+	                data: averagedWeightData,
+	                label: "Weight",
+	                borderColor: "#00ffee",
+	                yAxisID: 'weight-axis',
+			fill: false,
+			order: 0,
+			tension: 0.1,
+                    },
+	            {
 	                type: 'scatter',
 	                data: stepData,
 	                label: "Steps",
@@ -66,7 +84,7 @@
 	                type: 'bar',
 	                data: runData,
 	                label: "Runs",
-	                backgroundColor: "#770000",
+	                backgroundColor: "#00bb00",
 	                yAxisID: 'run-axis',
                     },
 	            {
@@ -100,7 +118,7 @@
 	                    scaleLabel: {labelString: "Run", display: false},
 	                    id: 'run-axis',
 	                    display: false,
-	                    ticks: {max: 1.0, min: 0}
+	                    ticks: {min: 0}
                         },
     	                {
 	                    scaleLabel: {labelString: "Yoga Session", display: false},

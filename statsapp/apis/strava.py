@@ -1,3 +1,4 @@
+from collections import defaultdict
 import datetime
 
 from flask import current_app
@@ -36,17 +37,16 @@ oauth.register(
 
 class StravaAPI(object):
 
-    def get_run_data(user):
+    def get_activity_data(user):
         token = fetch_token('strava', user)
 
         # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
         params = {"per_page": 200}
         resp = oauth.strava.get('athlete/activities', params=params, token=token)
-        runs = []
-
+        activities_by_type = defaultdict(list)
         for activity in resp.json():
             date = datetime.datetime.strptime(activity['start_date_local'], '%Y-%m-%dT%H:%M:%SZ')
             distance_metres = activity['distance']
-            runs.append((date, distance_metres))
-        return runs
-
+            sport_type = activity['sport_type']
+            activities_by_type[sport_type].append((date, distance_metres))
+        return activities_by_type

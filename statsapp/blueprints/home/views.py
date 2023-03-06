@@ -1,3 +1,6 @@
+from collections import defaultdict
+from collections import deque
+
 from flask import Blueprint
 from flask import jsonify
 from flask import render_template
@@ -64,7 +67,7 @@ def weight():
     earliest_date = sorted(weight_data, key=lambda x: x[0])[0][0]
 
     # TODO persist this in a DB
-    runs = StravaAPI.get_run_data(user)
+    strava_activity_data = StravaAPI.get_activity_data(user)
 
     #monthly_step_data = GoogleFitData.get_monthly_step_data(user, start_date=earliest_date)
     #formatted_step_data = [
@@ -80,8 +83,31 @@ def weight():
         dict(x=date.isoformat(), y=convert_kg_to_lbs(weight_kg)) for date, weight_kg in weight_data
     ]
 
+    # let's generated a moving average for weight
+    sorted_weights = sorted(formatted_weight_data, key=lambda element: element['x'])
+    window_size = 7
+    window = deque(maxlen=window_size)
+    weight_moving_average = []
+    for datum in sorted_weights:
+        window.append(datum)
+        if len(window) != window_size:
+            continue
+        # get the sum of weights
+        weight_sum = sum(map(lambda element: element['y'], window))
+        mean_weight = weight_sum / window_size
+        weight_date = window[int(window_size/2)]['x']
+        # just use the mid date for now as the date thingy.
+        weight_moving_average.append(dict(x=weight_date, y=mean_weight))
+
+
+    # if I do >1 run/strava session a day, this screws up the chart.
+    # we need to just extract the dates.
+    run_distances = defaultdict(float)
+    for date, distance_metres in strava_activity_data.get('Run', []):
+        run_distances[date.date()] += distance_metres
+
     formatted_run_data = [
-        dict(x=date.date().isoformat(), y=1) for date, distance_metres in runs if date.date() >= earliest_date
+        dict(x=date.isoformat(), y=distance_metres) for date, distance_metres in run_distances.items() if date >= earliest_date
     ]
 
     # if I do >1 yoga session a day, this screws up the chart.
@@ -93,6 +119,7 @@ def weight():
     ]
     context = {
         'weight_data': formatted_weight_data,
+        'averaged_weight_data': weight_moving_average,
         'step_data': formatted_step_data,
         'run_data': formatted_run_data,
         'yoga_data': formatted_yoga_data,

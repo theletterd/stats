@@ -9,10 +9,10 @@ class StravaStats(object):
 
     @cache.cached(key_prefix="running_stats", timeout=60 * 15)
     def get_stats(user):
-        runs = StravaAPI.get_run_data(user)
+        activity_data = StravaAPI.get_activity_data(user)
 
         run_data = {}
-        for run_date, distance_metres in runs:
+        for run_date, distance_metres in activity_data.get('Run', []):
 
             if run_date.year not in run_data:
                 run_data[run_date.year] = {
