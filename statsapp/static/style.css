@@ -59,7 +59,7 @@ body {
     background: radial-gradient(circle at 15% 20%, #263f8f 0%, transparent 35%),
                 radial-gradient(circle at 85% 10%, #6b3ea8 0%, transparent 30%),
                 linear-gradient(150deg, #0b1020 0%, #151b2f 40%, #0d1323 100%);
-    background-attachment: scroll;
+    background-attachment: fixed;
 }
 
 .main {
@@ -107,8 +107,11 @@ body {
 
 .stat-header {
     width: 100%;
-    padding: 20px;
+    padding: 14px 22px;
+    margin: 0 0 8px;
     font-size: 27px;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
     color: #d7ecff;
     background: linear-gradient(135deg, rgba(28, 75, 128, 0.93) 0%, rgba(70, 47, 134, 0.9) 100%);
 }
