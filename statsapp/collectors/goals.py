@@ -8,6 +8,8 @@ class GoalStats(object):
     def get_stats(user):
         # we don't use user here, it's just for consistency's sake
         goal_data = GoalsAPI.get_goals_data()
+        if not goal_data:
+            return []
 
         year_completion = goal_data['overall_completion']
 
@@ -19,4 +21,3 @@ class GoalStats(object):
                 notes='Goal data read from https://goals.theletterd.co.uk'
             )
         ]
-
