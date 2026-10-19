@@ -25,7 +25,8 @@ class GoogleFitYogaStats(object):
 
         total_minutes = int(total_duration_seconds / 60)
         average_session_length = 0
-        if total_sessions:
+
+        if total_sessions > 0:
             average_session_length = int((total_duration_seconds / total_sessions) / 60)
 
         return [
@@ -138,4 +139,3 @@ class GoogleFitStats(object):
             )
 
         return stats
-
