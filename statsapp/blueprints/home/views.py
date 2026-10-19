@@ -35,10 +35,7 @@ def index():
 @home_app.route("/data")
 def data():
     user = User.get_default_user()
-    raw_stats, errors = StatCollector.get_collected_stats(user)
-
-    # format the errors.
-    error_messages = [str(e) for e in errors]
+    raw_stats, failed_sources = StatCollector.get_collected_stats(user)
 
     stats = []
 
@@ -53,7 +50,7 @@ def data():
 
     data = dict(
         stats=stats,
-        error_messages=error_messages
+        error_messages=failed_sources
     )
 
     return jsonify(data)

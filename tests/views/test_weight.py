@@ -1,8 +1,15 @@
 import datetime
+import json
+import re
 
 from statsapp.models.strava import StravaActivity
 from statsapp.models.user import User
 from statsapp.models.withings import WithingsData
+
+
+def _chart_data(page):
+    match = re.search(r'<script id="chart-data" type="application/json">(.*?)</script>', page, re.S)
+    return json.loads(match.group(1))
 
 
 def test_weight_page_with_no_data(client):
@@ -19,4 +26,7 @@ def test_weight_page_with_data(client):
     resp = client.get('/weight')
 
     assert resp.status_code == 200
-    assert b'y: 8000.0' in resp.data
+    chart_data = _chart_data(resp.data.decode())
+    # two runs on the same day are summed into one bar
+    assert chart_data['runs'] == [{'x': '2020-01-02', 'y': 8000.0}]
+    assert len(chart_data['weight']) == 1

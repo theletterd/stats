@@ -1,144 +1,41 @@
 {% extends "base.html" %}
 
+{% block title %}Weight · Duncan's Stats{% endblock %}
+
 {% block head_extra %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js" defer></script>
+  <script src="{{ url_for('static', filename='weight.js') }}" defer></script>
 {% endblock %}
 
 {% block content %}
-    <div style="width: 1400px; background-color: #161619; margin: auto">
-	 <canvas id="weight-chart"></canvas>
-    </div>
-    <script>
-        var weightData = [
-	    {% for datapoint in weight_data %}
-	        {
-	            x: new Date("{{ datapoint.x }}"),
-	            y: {{ datapoint.y }}
-	        },
-            {% endfor %}
-	];
-        var weightMovingAverage = [
-	    {% for datapoint in weight_moving_average %}
-	        {
-	            x: new Date("{{ datapoint.x }}"),
-	            y: {{ datapoint.y }}
-	        },
-            {% endfor %}
-	];
-        var stepData = [
-	    {% for datapoint in step_data %}
-	        {
-	            x: new Date("{{ datapoint.x }}"),
-	            y: {{ datapoint.y }}
-	        },
-            {% endfor %}
-	];
-        var runData = [
-	    {% for datapoint in run_data %}
-	        {
-	            x: new Date("{{ datapoint.x }}"),
-	            y: {{ datapoint.y }}
-	        },
-            {% endfor %}
-	];
-        var yogaData = [
-	    {% for datapoint in yoga_data %}
-	        {
-	            x: new Date("{{ datapoint.x }}"),
-	            y: {{ datapoint.y }}
-	        },
-            {% endfor %}
-	];
-        var ctx = document.getElementById('weight-chart').getContext('2d');
-	ctx.canvas.width = 1000;
-	ctx.canvas.height = 400;
-        var myChart = new Chart(ctx, {
-            data: {
-                datasets: [
-	            {
-	                type: 'scatter',
-	                data: weightData,
-	                label: "Weight",
-	                backgroundColor: "#ff9900",
-	                yAxisID: 'weight-axis',
-                    },
-	            {
-	                type: 'line',
-	                data: weightMovingAverage,
-	                label: "Weight",
-	                borderColor: "#00ffee",
-	                yAxisID: 'weight-axis',
-			fill: false,
-			order: 0,
-			tension: 0.1,
-                    },
-	            {
-	                type: 'scatter',
-	                data: stepData,
-	                label: "Steps",
-	                backgroundColor: "#5500cd",
-	                yAxisID: 'step-axis',
-                    },
-	            {
-	                type: 'bar',
-	                data: runData,
-	                label: "Runs",
-	                backgroundColor: "#00bb00",
-	                yAxisID: 'run-axis',
-                    },
-	            {
-	                type: 'bar',
-	                data: yogaData,
-	                label: "Yoga",
-	                backgroundColor: "#0000ff",
-	                yAxisID: 'yoga-axis',
-                    },
-                ]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-	                distribution: 'linear',
-	                time: {unit: 'month'},
-                    }],
-	            yAxes: [
-	                {
-	                    scaleLabel: {labelString: "Weight (lbs)", display: true},
-	                    position: 'left',
-	                    id: 'weight-axis'
-	                },
-    	                {
-	                    scaleLabel: {labelString: "Steps", display: true},
-	                    position: 'right',
-	                    id: 'step-axis'
-                        },
-    	                {
-	                    scaleLabel: {labelString: "Run", display: false},
-	                    id: 'run-axis',
-	                    display: false,
-	                    ticks: {min: 0}
-                        },
-    	                {
-	                    scaleLabel: {labelString: "Yoga Session", display: false},
-	                    id: 'yoga-axis',
-	                    display: false,
-	                    ticks: {max: 1.0, min: 0}
-                        },
-                    ]
-                },
-	        legend: {display: false},
-	        layout: {
-	            padding: {
-	                top: 50,
-	                left: 25,
-	                right: 50,
-	                bottom: 25,
-	            }
-	        }
+  <div class="page-intro">
+    <h1>Weight</h1>
+    <p>Weigh-ins with a 7-reading average, alongside runs. Steps and yoga can be switched on from the legend.</p>
+  </div>
 
-            }
-        });
-    </script>
+  <div class="chart-card">
+    {% if weight_data %}
+      <div class="chart-toolbar" role="group" aria-label="Date range">
+        <button type="button" data-range-years="1">1Y</button>
+        <button type="button" data-range-years="3">3Y</button>
+        <button type="button" data-range-years="" aria-pressed="true">All</button>
+      </div>
+      <div class="chart-frame">
+        <canvas id="weight-chart" aria-label="Weight over time chart" role="img"></canvas>
+      </div>
+    {% else %}
+      <p class="empty-state">No weigh-ins yet.</p>
+    {% endif %}
+  </div>
+
+  <script id="chart-data" type="application/json">
+    {{ {
+      'weight': weight_data,
+      'weight_average': weight_moving_average,
+      'steps': step_data,
+      'runs': run_data,
+      'yoga': yoga_data,
+    }|tojson }}
+  </script>
 {% endblock %}

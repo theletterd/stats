@@ -40,6 +40,7 @@ def app(): # noqa
 
     app = statsapp.create_app({
         'TESTING': True,
+        'SECRET_KEY': 'test-secret-key',
         'DEFAULT_USER_EMAIL': 'test.email@example.com',
     })
 

@@ -1,125 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-      <script type="text/babel">
+  <div id="stats" class="stat-groups" data-src="{{ url_for('home.data') }}" aria-busy="true">
+    <section class="stat-group">
+      <div class="stat-row">
+        {% for _ in range(8) %}<div class="skeleton"></div>{% endfor %}
+      </div>
+    </section>
+  </div>
+  <p id="source-errors" class="source-errors" hidden></p>
 
-	  class BasicStat extends React.Component {
-
-	      render() {
-	          var values = [this.props.value];
-	          var valueElements;
-	          if (Array.isArray(this.props.value) === true) {
-	               valueElements = this.props.value.map(value =>
-	                  <div key={this.props.stat_id + value} className="stat-value">{value}</div>
-	              );
-	          } else {
-		       valueElements = [
-			  <div key={this.props.stat_id + this.props.value} className="stat-value">{this.props.value}</div>
-		       ];
-	          }
-
-	          return (
-           	      <div className="stat">
-		          <div className="stat-description">{this.props.description}</div>
-			  {this.props.notes !== undefined && this.props.notes.trim() !== '' &&
-			      <a tab-index="0" className="notes" data-toggle="popover" data-placement="left" data-content={this.props.notes}></a>
-			  }
-			  <div className="values">
-        			  {valueElements}
-			  </div>
-		      </div>
-                  )
-	      }
-	  }
-
-          class BasicStatSubGroup extends React.Component {
-	      render() {
-	          const basicStatElements = this.props.stats.map(stat =>
-	              <BasicStat key={stat.stat_id} description={stat.description} value={stat.value} stat_id={stat.stat_id} notes={stat.notes}/>
-	          );
-		  return (
-		      <div className="stats">
-			{basicStatElements}
-		      </div>
-		  );
-	      }
-          }
-
-	  class BasicStats extends React.Component {
-	      render() {
-		  const basicStatSubGroups = this.props.stat_group.stats.map(statSubGroup =>
-		      <BasicStatSubGroup key={statSubGroup[0].stat_id + "group"} stats={statSubGroup} />
-                  );
-	          return (
-	            <div className="statgroup">
-		      {this.props.stat_group.description != undefined &&
-		          <div className="stat stat-header">{this.props.stat_group.description}</div>
-                      }
-		      {basicStatSubGroups}
-		    </div>
-	          );
-	      }
-	  }
-
-          class Controller extends React.Component {
-	      constructor(props) {
-                  super(props);
-		  this.state = {};
-              }
-
-	      componentDidMount() {
-                  fetch("./data")
-                      .then(response => response.json())
-                      .then(data => {
-                          this.setState({stats: data.stats, error_messages: data.error_messages});
-                  });
-	      }
-
-	      componentDidUpdate() {
-		 $('[data-toggle="popover"]').popover({trigger: "click"});
-              }
-
-              render() {
-		  if (this.state.stats === undefined) {
-		      return (
-                          <div className="stat loading">
-                              Loading...
-		          </div>
-		      );
-		  }
-		  const basicStatElements = this.state.stats.map(statCollection =>
-		      <BasicStats key={statCollection.stat_group} stat_group={statCollection} />
-                  );
-
-		  if(this.state.error_messages.length > 0) {
-		      console.log("Errors talking to the following APIs:");
-		      this.state.error_messages.forEach(function(error) {
-		          console.log("   " + error);
-		      });
-		  }
-
-                  return (
-		      <div className="stat-container">
-			{basicStatElements}
-		      </div>
-                  );
-              }
-          }
-
-	  $('body').on('click', function (e) {
-	      //did not click a popover toggle or popover
-	      if ($(e.target).data('toggle') !== 'popover'
-                  && $(e.target).parents('.popover.in').length === 0) {
-                  $('[data-toggle="popover"]').popover('hide');
-	      }
-	  });
-
-          ReactDOM.render(
-              <Controller />,
-              document.getElementById('root')
-          );
-
-      </script>
-
-
+  <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
 {% endblock %}

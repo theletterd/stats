@@ -21,17 +21,18 @@ class StatCollector(object):
         if not stats:
             stat_list = []
 
-            stat_getter_methods = [
-                GoogleFitStats.get_stats,
-                GoogleFitYogaStats.get_stats,
-                StravaStats.get_stats,
-                GoodreadsStats.get_stats,
-                GoogleSheetsStats.get_stats,
-                GoalStats.get_stats,
-                WithingsStats.get_stats,
+            # (source name shown to visitors if it fails, getter)
+            stat_getters = [
+                ("Google Fit", GoogleFitStats.get_stats),
+                ("Google Fit yoga", GoogleFitYogaStats.get_stats),
+                ("Strava", StravaStats.get_stats),
+                ("Goodreads", GoodreadsStats.get_stats),
+                ("Google Sheets", GoogleSheetsStats.get_stats),
+                ("Goals", GoalStats.get_stats),
+                ("Withings", WithingsStats.get_stats),
             ]
 
-            for getter in stat_getter_methods:
+            for source, getter in stat_getters:
                 try:
                     result = getter(user)
                     if type(result) is Stat:
@@ -39,7 +40,8 @@ class StatCollector(object):
                     else:
                         stat_list.extend(result)
                 except Exception as e:
-                    errors.append(e)
+                    # the exception itself only goes to the logs, not the public page
+                    errors.append(source)
                     logging.exception(e)
 
             for stat in stat_list:
