@@ -9,7 +9,7 @@ class WithingsData(db.Model):
     user = db.relationship("User")
     date = db.Column(db.Date, nullable=False)
     weight_kg = db.Column(db.Float)
-    __tableargs__ = (db.UniqueConstraint(user_id, date))
+    __table_args__ = (db.UniqueConstraint('user_id', 'date'),)
 
 
     def get_most_recent_weight(user):

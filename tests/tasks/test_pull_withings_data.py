@@ -10,7 +10,7 @@ def test_get_data_and_upsert(mock_withings_api):
     mock_withings_api.return_value = weight
     user = User.get_default_user()
     date = datetime.date.today() # doesn't matter what the day is
-    PullWithingsData().get_data_and_upsert(date, user)
+    PullWithingsData(argv=[]).get_data_and_upsert(date, user)
 
     data = WithingsData.query.all()
     assert len(data) == 1

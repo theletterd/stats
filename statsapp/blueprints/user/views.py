@@ -61,6 +61,7 @@ def login():
             login_user(user)
             return redirect(url_for("user.authorized_apps"))
         else:
+            flash("Incorrect email or password")
             return render_template("login.html")
     else:
         if current_user.is_authenticated:
@@ -91,13 +92,12 @@ def populate_googlefit_dates():
 
         if date in missing_dates:
             try:
-                step_count, distance_metres, weight_kg = GoogleFitAPI.get_stats_for_date(date, current_user)
+                step_count, distance_metres = GoogleFitAPI.get_stats_for_date(date, current_user)
                 GoogleFitData.upsert(
                     current_user,
                     date,
                     step_count,
-                    distance_metres,
-                    weight_kg
+                    distance_metres
                 )
             except Exception as e:
                 logging.exception(e)
