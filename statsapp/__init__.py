@@ -37,7 +37,6 @@ def create_app(config=None):
         csrf.init_app(app)
 
         db.init_app(app)
-        db.create_all()
 
         bcrypt.init_app(app)
         cache.init_app(app)
@@ -51,5 +50,9 @@ def create_app(config=None):
         app.register_blueprint(blueprints.home_app)
         app.register_blueprint(blueprints.oauth_app)
         app.register_blueprint(blueprints.user_app)
+
+        # models are only imported via the apis and blueprints above, so tables
+        # can't be created until they've all been registered
+        db.create_all()
 
     return app
