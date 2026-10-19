@@ -72,6 +72,9 @@ class GoogleFitStats(object):
 
     def _get_stats_for_year(user, year, display_str, stat_str):
         data = GoogleFitData.get_data_for_year(user, year)
+        if not data:
+            # no rows means no data for the year, rather than zero steps
+            return []
 
         step_count = 0
         distance_metres = 0

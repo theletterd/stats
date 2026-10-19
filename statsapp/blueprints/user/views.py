@@ -38,7 +38,7 @@ def authorized_apps():
         ('Withings', withings_url),
     )
 
-    date_chunk_iterator = chunks(missing_dates, 20)
+    date_chunk_iterator = chunks(sorted(missing_dates), 20)
     date_chunks = [list(x) for x in date_chunk_iterator]
     context = dict(
         auth_urls=auth_urls,
