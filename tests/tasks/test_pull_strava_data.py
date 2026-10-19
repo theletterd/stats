@@ -56,3 +56,11 @@ def test_full_flag_ignores_stored_activities(mock_strava_api):
     PullStravaData(argv=['--full']).get_data_and_upsert(user)
 
     mock_strava_api.assert_called_once_with(user, after=None)
+
+
+def test_run_skips_users_without_strava_token(mock_strava_api):
+    from statsapp.tasks.pull_strava_data import PullStravaData
+
+    PullStravaData(argv=[]).run()
+
+    mock_strava_api.assert_not_called()

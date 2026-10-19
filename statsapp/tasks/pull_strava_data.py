@@ -3,7 +3,7 @@ import datetime
 import logging
 
 import statsapp
-from statsapp.apis.strava import StravaAPI
+from statsapp.models.oauth import fetch_token
 from statsapp.models.strava import StravaActivity
 from statsapp.models.user import User
 
@@ -29,6 +29,10 @@ class PullStravaData(object):
         self.full = self.args.full
 
     def get_data_and_upsert(self, user):
+        # statsapp.apis.strava reads app config at import time, so it can only be
+        # imported once the app context exists
+        from statsapp.apis.strava import StravaAPI
+
         after = None
         if not self.full:
             most_recent_start = StravaActivity.get_most_recent_start(user)
@@ -55,6 +59,10 @@ class PullStravaData(object):
             users = [User.query.get(self.user_id)]
 
         for user in users:
+            # without a token of their own, authlib falls back to the default user's token
+            if not fetch_token('strava', user):
+                print(f"{user} has no strava token, skipping")
+                continue
             try:
                 self.get_data_and_upsert(user)
             except Exception as e:
