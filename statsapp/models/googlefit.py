@@ -13,7 +13,7 @@ class GoogleFitData(db.Model):
     date = db.Column(db.Date, nullable=False)
     step_count = db.Column(db.Integer)
     distance_metres = db.Column(db.Float)
-    __tableargs__ = (db.UniqueConstraint(user_id, date))
+    __table_args__ = (db.UniqueConstraint('user_id', 'date'),)
 
     def days_missing(user):
         # we should have days for all of the previous year, and
@@ -125,7 +125,7 @@ class GoogleFitYoga(db.Model):
     date = db.Column(db.Date, nullable=False)
     start_time = db.Column(db.Integer, nullable=False)
     duration_seconds = db.Column(db.Integer, nullable=False)
-    __tableargs__ = (db.UniqueConstraint(user_id, start_time))
+    __table_args__ = (db.UniqueConstraint('user_id', 'start_time'),)
 
     def get_sessions(user, start_date=None):
         query = GoogleFitYoga.query.filter_by(
@@ -133,7 +133,7 @@ class GoogleFitYoga(db.Model):
         )
 
         if start_date:
-            query.filter(
+            query = query.filter(
                 GoogleFitYoga.date >= start_date
             )
 

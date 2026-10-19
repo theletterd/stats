@@ -1,32 +1,22 @@
-from statsapp import cache
 from statsapp.models.stat import Stat
-from statsapp.apis.strava import StravaAPI
+from statsapp.models.strava import StravaActivity
 from statsapp.tools.util import today_pacific
 from statsapp.tools.util import convert_metres_to_miles
 
 
 class StravaStats(object):
 
-    @cache.cached(key_prefix="running_stats", timeout=60 * 15)
     def get_stats(user):
-        activity_data = StravaAPI.get_activity_data(user)
-
-        run_data = {}
-        for run_date, distance_metres in activity_data.get('Run', []):
-
-            if run_date.year not in run_data:
-                run_data[run_date.year] = {
-                    'run_count': 0,
-                    'distance_run_metres': 0
-                }
-
-            run_data[run_date.year]['run_count'] += 1
-            run_data[run_date.year]['distance_run_metres'] += distance_metres
-
-
-        # construct stats
         current_year = today_pacific().year
         prev_year = current_year - 1
+
+        run_data = {}
+        for year in (current_year, prev_year):
+            runs = StravaActivity.get_activities_for_year(user, 'Run', year)
+            run_data[year] = {
+                'run_count': len(runs),
+                'distance_run_metres': sum(run.distance_metres or 0 for run in runs)
+            }
 
         distance_current_year = convert_metres_to_miles(run_data.get(current_year ,{}).get('distance_run_metres', 0))
         distance_last_year = convert_metres_to_miles(run_data.get(prev_year, {}).get('distance_run_metres', 0))

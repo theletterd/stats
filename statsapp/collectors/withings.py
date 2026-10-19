@@ -24,7 +24,7 @@ class WithingsStats(object):
     def _get_stats_for_year(user, year, display_str, stat_str):
         data = WithingsData.get_data_for_year(user, year)
         if not data:
-            return None
+            return []
 
         weights = [datapoint.weight_kg for datapoint in data]
 

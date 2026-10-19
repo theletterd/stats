@@ -7,9 +7,9 @@ from flask import render_template
 
 from . import view_config
 from .stat_collector import StatCollector
-from statsapp.apis.strava import StravaAPI
 from statsapp.models.googlefit import GoogleFitData
 from statsapp.models.googlefit import GoogleFitYoga
+from statsapp.models.strava import StravaActivity
 from statsapp.models.withings import WithingsData
 from statsapp.models.user import User
 from statsapp.tools.util import convert_kg_to_lbs
@@ -63,11 +63,9 @@ def data():
 def weight():
     user = User.get_default_user()
     weight_data = WithingsData.get_weight_datapoints_for_user(user)
-    # that is an assumption. Let's do a sort
-    earliest_date = sorted(weight_data, key=lambda x: x[0])[0][0]
-
-    # TODO persist this in a DB
-    strava_activity_data = StravaAPI.get_activity_data(user)
+    if not weight_data:
+        return render_template('weight.html', weight_data=[], weight_moving_average=[], step_data=[], run_data=[], yoga_data=[])
+    earliest_date = min(date for date, _ in weight_data)
 
     weekly_step_data = GoogleFitData.get_weekly_step_data(user, start_date=earliest_date)
     formatted_step_data = [
@@ -97,14 +95,13 @@ def weight():
 
 
 
-    # if I do >1 run/strava session a day, this screws up the chart.
-    # we need to just extract the dates.
+    # sum distances per day, so multiple runs on one day show as one bar
     run_distances = defaultdict(float)
-    for date, distance_metres in strava_activity_data.get('Run', []):
-        run_distances[date.date()] += distance_metres
+    for run in StravaActivity.get_activities(user, 'Run', start_date=earliest_date):
+        run_distances[run.start_date_local.date()] += run.distance_metres or 0
 
     formatted_run_data = [
-        dict(x=date.isoformat(), y=distance_metres) for date, distance_metres in run_distances.items() if date >= earliest_date
+        dict(x=date.isoformat(), y=distance_metres) for date, distance_metres in run_distances.items()
     ]
 
     # if I do >1 yoga session a day, this screws up the chart.
