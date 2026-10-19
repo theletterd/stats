@@ -1,4 +1,3 @@
-from collections import defaultdict
 import datetime
 
 from flask import current_app
@@ -37,16 +36,37 @@ oauth.register(
 
 class StravaAPI(object):
 
-    def get_activity_data(user):
+    PAGE_SIZE = 200
+
+    def get_activities(user, after=None):
+        """
+        Returns every activity for the user as a list of dicts
+        with strava_id, sport_type, start_date_local and distance_metres.
+        If `after` (a datetime) is given, only activities starting after it are returned.
+        """
         token = fetch_token('strava', user)
 
-        # optimistically assuming I won't run more than 100 times a year on average. seems reasonable.
-        params = {"per_page": 200}
-        resp = oauth.strava.get('athlete/activities', params=params, token=token)
-        activities_by_type = defaultdict(list)
-        for activity in resp.json():
-            date = datetime.datetime.strptime(activity['start_date_local'], '%Y-%m-%dT%H:%M:%SZ')
-            distance_metres = activity['distance']
-            sport_type = activity['sport_type']
-            activities_by_type[sport_type].append((date, distance_metres))
-        return activities_by_type
+        params = {"per_page": StravaAPI.PAGE_SIZE}
+        if after:
+            params["after"] = int(after.replace(tzinfo=datetime.timezone.utc).timestamp())
+
+        activities = []
+        page = 1
+        while True:
+            resp = oauth.strava.get('athlete/activities', params={**params, "page": page}, token=token)
+            resp.raise_for_status()
+            page_activities = resp.json()
+
+            for activity in page_activities:
+                activities.append(dict(
+                    strava_id=activity['id'],
+                    sport_type=activity['sport_type'],
+                    start_date_local=datetime.datetime.strptime(activity['start_date_local'], '%Y-%m-%dT%H:%M:%SZ'),
+                    distance_metres=activity['distance'],
+                ))
+
+            if len(page_activities) < StravaAPI.PAGE_SIZE:
+                break
+            page += 1
+
+        return activities

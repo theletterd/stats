@@ -13,17 +13,17 @@ date_parser = lambda s: datetime.date.fromisoformat(s)
 
 class PullWithingsData(object):
 
-    def __init__(self):
-        self.setup_parser()
+    def __init__(self, argv=None):
+        self.setup_parser(argv)
         self.process_args()
 
-    def setup_parser(self):
+    def setup_parser(self, argv):
         parser = argparse.ArgumentParser()
         parser.add_argument("--user-id", type=int, help="user_id to update for. If omitted, will update values for all users")
         parser.add_argument("--start-date", type=date_parser, help="YYYY-MM-DD, date to start pulling data for. If omitted, defaults to yesterday")
         parser.add_argument("--end-date", type=date_parser, help="YYYY-MM-DD, date to pull data until (inclusive). If omitted, defaults to today")
 
-        self.args = parser.parse_args()
+        self.args = parser.parse_args(argv)
 
     def process_args(self):
         self.end_date = self.args.end_date or util.today_pacific()
@@ -47,7 +47,7 @@ class PullWithingsData(object):
         if not self.user_id:
             users = User.query.all()
         else:
-            users = [User.get_default_user()]
+            users = [User.query.get(self.user_id)]
 
         for user in users:
             for date in dates:

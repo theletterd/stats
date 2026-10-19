@@ -65,7 +65,7 @@ class PullRecentGoogleFitData(object):
         if not self.user_id:
             users = User.query.all()
         else:
-            users = [User.get_default_user()]
+            users = [User.query.get(self.user_id)]
 
         for user in users:
             for date in dates:
